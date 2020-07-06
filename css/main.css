@@ -1167,7 +1167,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #52c95e;
+  background: #c308ff;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2564,5 +2564,5 @@ ul.breadcrumb li + li:last-child {
 }
 body {
   background: url("https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-7-6-17-16-27.png");
-  background-repeat: no-repeat;
+  background-repeat: repeat;
 }
