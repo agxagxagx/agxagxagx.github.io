@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://xsblog.xyz/about/index.html</loc>
+    
+    <lastmod>2020-07-06T11:54:47.855Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://xsblog.xyz/tags/index.html</loc>
+    
+    <lastmod>2020-07-06T11:54:16.945Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://xsblog.xyz/2020/07/06/1/</loc>
     
     <lastmod>2020-07-06T11:16:21.707Z</lastmod>
