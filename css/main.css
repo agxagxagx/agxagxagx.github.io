@@ -206,7 +206,7 @@ body {
   background: var(--body-bg-color);
   color: var(--text-color);
   font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 2;
 }
 @media (max-width: 991px) {
@@ -1202,7 +1202,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #ff3649;
+  background: #b62eff;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2687,7 +2687,10 @@ ul.breadcrumb li + li:last-child {
   }
 }
 body {
-  background: url("https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-7-6-21-8-49.png");
-  background-repeat: no-repeat;
+  background: url("https://i.loli.net/2020/07/07/YX2rfUsVlKS7tPJ.png");
+  background-repeat: repeat;
   background-attachment: fixed;
+}
+.back-to-top {
+  background: url("https://i.loli.net/2020/07/07/YX2rfUsVlKS7tPJ.png");
 }
