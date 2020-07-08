@@ -1174,7 +1174,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #e3ff54;
+  background: #5c2a54;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2772,4 +2772,10 @@ hr {
   border: none;
   background-color: #a2d3ff;
   background-image: repeating-linear-gradient(-45deg, #fff, #fff 4px, transparent 4px, transparent 8px);
+}
+.sidebar-inner {
+  font-size: 16px;
+}
+.header-inner {
+  font-size: 16px;
 }
