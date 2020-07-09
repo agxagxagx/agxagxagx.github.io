@@ -20,20 +20,20 @@
     var CONFIG = {"hostname":"xsblog.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="加油，加油，加油！！">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Agx&#39;s blog">
-<meta property="og:url" content="http://xsblog.xyz/archives/2020/05/index.html">
+  <meta name="description" content="ubuntu允许以root用户登录ssh修改配置文件 1sudo vi &#x2F;etc&#x2F;ssh&#x2F;sshd_config 找到下面配置： 1234# Authentication:LoginGraceTime 120PermitRootLogin prohibit-passwordStrictModes yes 更改为： 12345# Authentication:Login">
+<meta property="og:type" content="article">
+<meta property="og:title" content="配置ubuntu">
+<meta property="og:url" content="http://xsblog.xyz/2020/05/29/note/%E9%85%8D%E7%BD%AEubuntu/index.html">
 <meta property="og:site_name" content="Agx&#39;s blog">
-<meta property="og:description" content="加油，加油，加油！！">
+<meta property="og:description" content="ubuntu允许以root用户登录ssh修改配置文件 1sudo vi &#x2F;etc&#x2F;ssh&#x2F;sshd_config 找到下面配置： 1234# Authentication:LoginGraceTime 120PermitRootLogin prohibit-passwordStrictModes yes 更改为： 12345# Authentication:Login">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-05-29T00:00:00.000Z">
+<meta property="article:modified_time" content="2020-07-09T05:48:34.430Z">
 <meta property="article:author" content="AGX">
-<meta property="article:tag" content="ctf">
-<meta property="article:tag" content="AGX">
-<meta property="article:tag" content="pwn">
+<meta property="article:tag" content="note">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://xsblog.xyz/archives/2020/05/">
+<link rel="canonical" href="http://xsblog.xyz/2020/05/29/note/%E9%85%8D%E7%BD%AEubuntu/">
 
 
 <script id="page-configurations">
@@ -41,12 +41,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>归档 | Agx's blog</title>
+  <title>配置ubuntu | Agx's blog</title>
   
 
 
@@ -178,136 +178,147 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://xsblog.xyz/2020/05/29/note/%E9%85%8D%E7%BD%AEubuntu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-07-06-19-58-11.png">
+      <meta itemprop="name" content="AGX">
+      <meta itemprop="description" content="加油，加油，加油！！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Agx's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          配置ubuntu
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-29 00:00:00" itemprop="dateCreated datePublished" datetime="2020-05-29T00:00:00+00:00">2020-05-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-09 05:48:34" itemprop="dateModified" datetime="2020-07-09T05:48:34+00:00">2020-07-09</time>
+              </span>
+
+          
   
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <span class="collection-header">嗯..! 目前共计 10 篇日志。 继续努力。</span>
-      </div>
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/05/29/note/%E9%85%8D%E7%BD%AEubuntu/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/29/note/%E9%85%8D%E7%BD%AEubuntu/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2020</span>
-    </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-05-29T00:00:00+00:00"
-              content="2020-05-29">
-          05-29
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/05/29/checksec%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" itemprop="url">
-            <span itemprop="name">checksec工具使用</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-05-29T00:00:00+00:00"
-              content="2020-05-29">
-          05-29
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/05/29/note/note2/" itemprop="url">
-            <span itemprop="name">使用python更改一个文件夹中所有文件内容</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-05-29T00:00:00+00:00"
-              content="2020-05-29">
-          05-29
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/05/29/note/%E9%85%8D%E7%BD%AEubuntu/" itemprop="url">
-            <span itemprop="name">配置ubuntu</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-05-26T00:00:00+00:00"
-              content="2020-05-26">
-          05-26
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/05/26/note/note1/" itemprop="url">
-            <span itemprop="name">随笔一</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-05-18T11:24:02+00:00"
-              content="2020-05-18">
-          05-18
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/05/18/hexo%E5%AE%89%E8%A3%85/" itemprop="url">
-            <span itemprop="name">hexo安装</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
+        <h1 id="ubuntu允许以root用户登录ssh"><a href="#ubuntu允许以root用户登录ssh" class="headerlink" title="ubuntu允许以root用户登录ssh"></a>ubuntu允许以root用户登录ssh</h1><p>修改配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi &#x2F;etc&#x2F;ssh&#x2F;sshd_config</span><br></pre></td></tr></table></figure>
+<p>找到下面配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Authentication:</span><br><span class="line">LoginGraceTime 120</span><br><span class="line">PermitRootLogin prohibit-password</span><br><span class="line">StrictModes yes</span><br></pre></td></tr></table></figure>
+<p>更改为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Authentication:</span><br><span class="line">LoginGraceTime 120</span><br><span class="line">#PermitRootLogin prohibit-password</span><br><span class="line">PermitRootLogin yes</span><br><span class="line">StrictModes yes</span><br></pre></td></tr></table></figure>
+<p>重启ssh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service ssh restart</span><br></pre></td></tr></table></figure>
+<p>接下来就可使用root登录了</p>
+<h1 id="使用root登录Ubuntu系统"><a href="#使用root登录Ubuntu系统" class="headerlink" title="使用root登录Ubuntu系统"></a>使用root登录Ubuntu系统</h1><h2 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h2><p>以普通用户登录系统，创建root用户的密码<br>在终端输入命令：<code>sudo passwd root</code><br>然后输入你要设置的密码，这样就完成了设置root用户密码的步骤</p>
+<h2 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h2><p>修改文件<code>/usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf</code>文件，增加两行：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">greeter-show-manual-login&#x3D;true</span><br><span class="line">all-guest&#x3D;false</span><br></pre></td></tr></table></figure>
+<p>保存</p>
+<h2 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h2><p>进入<code>/etc/pam.d</code>目录，修改<code>gdm-autologin</code>和<code>gdm-password</code>文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi gdm-autologin</span><br></pre></td></tr></table></figure>
+<p>注释掉auth required pam_succeed_if.so user != root quiet_success这一行，保存</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi gdm-password</span><br></pre></td></tr></table></figure>
+<p>注释掉<code>auth required pam_succeed_if.so user != root quiet_success</code>这一行，保存</p>
+<h2 id="第四步"><a href="#第四步" class="headerlink" title="第四步"></a>第四步</h2><p>修改<code>/root/.profile</code>文件 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi &#x2F;root&#x2F;.profile</span><br></pre></td></tr></table></figure>
+<p>将文件末尾的<code>mesg n || true</code>这一行修改成<code>tty -s&amp;&amp;mesg n || true</code>，保存<br>重启系统，输入root用户名和密码，登陆系统</p>
 
     </div>
-  </div>
-  
-  
-  
 
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>AGX
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://xsblog.xyz/2020/05/29/note/%E9%85%8D%E7%BD%AEubuntu/" title="配置ubuntu">http://xsblog.xyz/2020/05/29/note/配置ubuntu/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/note/" rel="tag"># note</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/26/note/note1/" rel="prev" title="随笔一">
+      <i class="fa fa-chevron-left"></i> 随笔一
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/05/29/note/note2/" rel="next" title="使用python更改一个文件夹中所有文件内容">
+      使用python更改一个文件夹中所有文件内容 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -354,6 +365,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ubuntu允许以root用户登录ssh"><span class="nav-text">ubuntu允许以root用户登录ssh</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用root登录Ubuntu系统"><span class="nav-text">使用root登录Ubuntu系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一步"><span class="nav-text">第一步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二步"><span class="nav-text">第二步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三步"><span class="nav-text">第三步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四步"><span class="nav-text">第四步</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
