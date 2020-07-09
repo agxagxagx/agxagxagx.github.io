@@ -985,7 +985,7 @@ pre .javascript .function {
   color: var(--brand-hover-color);
 }
 .site-title {
-  font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: 'Pacifico';
   font-size: 1.375em;
   font-weight: normal;
   margin: 0;
@@ -1174,7 +1174,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #ffaad7;
+  background: #ffc;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -1949,6 +1949,13 @@ pre .javascript .function {
 }
 #qr p {
   text-align: center;
+}
+.post-copyright {
+  background: var(--card-bg-color);
+  border-left: 3px solid #ff2a2a;
+  list-style: none;
+  margin: 2em 0 0;
+  padding: 0.5em 1em;
 }
 .category-all-page .category-all-title {
   text-align: center;
@@ -2764,7 +2771,7 @@ pre code {
 }
 .posts-expand .post-body img {
   padding: 3px;
-  border: 1px solid #ddd;
+  border: 1px solid #ccc;
 }
 hr {
   margin: 40px 0;
@@ -2779,6 +2786,21 @@ hr {
 .header-inner {
   font-size: 16px;
 }
+@font-face {
+  font-family: 'Pacifico';
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/log-font.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+.site-title {
+  display: inline-block;
+  vertical-align: top;
+  line-height: 36px;
+  font-size: 24px;
+  font-weight: normal;
+  font-family: 'Pacifico', "PingFang SC", "Microsoft YaHei", sans-serif;
+}
 .post-body h1::before,
 .post-body h2::before,
 .post-body h3::before,
@@ -2789,4 +2811,26 @@ hr {
   content: "# ";
   color: #fc6423;
   font-weight: bold;
+}
+.post-copyright {
+  border-radius: 7px;
+}
+p {
+  margin: 0 0 20px 0;
+}
+a {
+  color: #555;
+  text-decoration: none;
+  outline: none;
+  border-bottom: 1px dashed #999;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+a:hover {
+  color: #222;
+  border-bottom-color: #222;
+}
+.post-body img {
+  margin: 0;
+  margin-bottom: 25px;
 }
