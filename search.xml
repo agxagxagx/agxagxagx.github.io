@@ -1,29 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>hexo安装</title>
-    <url>/2020/05/18/hexo%E5%AE%89%E8%A3%85/</url>
-    <content><![CDATA[<p>现在网上很多教程都太老，过时了，导致我搭建的时候绕了很多弯路，好在最后还是被我搭建好了，记一下安装过程。</p>
+    <title>IDA远程调试</title>
+    <url>/2020/06/10/IDA%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95/</url>
+    <content><![CDATA[<p>记一次IDA远程调试过程</p>
 <a id="more"></a>
 <hr>
-<h1 id="hexo安装"><a href="#hexo安装" class="headerlink" title="hexo安装"></a>hexo安装</h1><h3 id="首先运行一个容器"><a href="#首先运行一个容器" class="headerlink" title="首先运行一个容器"></a>首先运行一个容器</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run -itd -p 80:4000 --name hexo ubuntu bash</span><br></pre></td></tr></table></figure>
-<p>这里以在ubuntu中搭建为例子</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker exec -it hexo env LANG&#x3D;C.UTF-8 bash</span><br></pre></td></tr></table></figure>
-<p>其中<code>env LANG=C.UTF-8</code>为环境变量，这样在docker容器中可以输入中文</p>
-<h3 id="安装git-curl-wget"><a href="#安装git-curl-wget" class="headerlink" title="安装git,curl,wget"></a>安装git,curl,wget</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apt-get update</span><br><span class="line">apt-get -y install git curl wget</span><br></pre></td></tr></table></figure>
+<p>首先打开IDA所在文件夹<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-18-50.png" alt="2020-06-10-21-18-50"><br>将<code>linux_server</code>和<code>linux_server64</code>两个文件传输到要远程访问的linux机器上  </p>
+<p>设置执行权限  </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@VM-0-15-ubuntu:~/ctf<span class="comment"># chmod +x linux_server</span></span><br><span class="line">root@VM-0-15-ubuntu:~/ctf<span class="comment"># chmod +x linux_server64</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="安装nodejs"><a href="#安装nodejs" class="headerlink" title="安装nodejs"></a>安装nodejs</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apt-get install nodejs</span><br><span class="line">apt-get install npm</span><br><span class="line">npm i -g npm</span><br><span class="line"># 重启命令行，查看更新后的版本 npm -v</span><br><span class="line">npm install -g n</span><br><span class="line">n 12.18.2</span><br><span class="line"># 重启命令行，查看更新后的版本 nodejs -v</span><br></pre></td></tr></table></figure>
-
-<h3 id="安装cnpm"><a href="#安装cnpm" class="headerlink" title="安装cnpm"></a>安装cnpm</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install -g cnpm --registry&#x3D;https:&#x2F;&#x2F;registry.npm.taobao.org</span><br></pre></td></tr></table></figure>
-<h3 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h3><p>使用cnpm安装hexo</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cnpm install -g hexo-cli</span><br></pre></td></tr></table></figure>
-<p>然后创建一个文件夹，命名随意，将hexo的资源都放进去</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd ~</span><br><span class="line">mkdir hexo</span><br><span class="line">cd hexo </span><br><span class="line">hexo init</span><br></pre></td></tr></table></figure>
-<h3 id="Hexo的更新"><a href="#Hexo的更新" class="headerlink" title="Hexo的更新"></a>Hexo的更新</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm update hexo</span><br></pre></td></tr></table></figure>
-<p>使用<code>hexo -v</code>查看hexo当前版本</p>
+<p>如何要进行调试的文件是32程序则运行<code>linux_server</code>,如果是64位程序则运行<code>linux_server64</code><br>下面以32位程序为例：<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-28-08.png" alt="2020-06-10-21-28-08"><br>可以看到监听的端口为23946</p>
+<p>运行IDA32,选择远程linux调试<br>Debugger-&gt;Run-&gt;Remote Linux debugger<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-31-16.png" alt="2020-06-10-21-31-16"></p>
+<p>进行如下设置<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-35-34.png" alt="2020-06-10-21-35-34">  </p>
+<p>设置完成之后，就可以使用IDA远程调试了<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-38-26.png" alt="2020-06-10-21-38-26"><br>基本操作与Ollydbg差不多，支持更改汇编代码</p>
 ]]></content>
       <tags>
-        <tag>hexo</tag>
+        <tag>IDA</tag>
       </tags>
   </entry>
   <entry>
@@ -146,25 +139,6 @@
       </tags>
   </entry>
   <entry>
-    <title>IDA远程调试</title>
-    <url>/2020/06/10/IDA%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95/</url>
-    <content><![CDATA[<p>记一次IDA远程调试过程</p>
-<a id="more"></a>
-<hr>
-<p>首先打开IDA所在文件夹<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-18-50.png" alt="2020-06-10-21-18-50"><br>将<code>linux_server</code>和<code>linux_server64</code>两个文件传输到要远程访问的linux机器上  </p>
-<p>设置执行权限  </p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@VM-0-15-ubuntu:~/ctf<span class="comment"># chmod +x linux_server</span></span><br><span class="line">root@VM-0-15-ubuntu:~/ctf<span class="comment"># chmod +x linux_server64</span></span><br></pre></td></tr></table></figure>
-
-<p>如何要进行调试的文件是32程序则运行<code>linux_server</code>,如果是64位程序则运行<code>linux_server64</code><br>下面以32位程序为例：<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-28-08.png" alt="2020-06-10-21-28-08"><br>可以看到监听的端口为23946</p>
-<p>运行IDA32,选择远程linux调试<br>Debugger-&gt;Run-&gt;Remote Linux debugger<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-31-16.png" alt="2020-06-10-21-31-16"></p>
-<p>进行如下设置<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-35-34.png" alt="2020-06-10-21-35-34">  </p>
-<p>设置完成之后，就可以使用IDA远程调试了<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-38-26.png" alt="2020-06-10-21-38-26"><br>基本操作与Ollydbg差不多，支持更改汇编代码</p>
-]]></content>
-      <tags>
-        <tag>IDA</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>xctf进阶区</title>
     <url>/2020/06/07/xctf%E8%BF%9B%E9%98%B6%E5%8C%BA/</url>
     <content><![CDATA[<p>持续更新攻防世界pwn进阶区刷题过程。。。</p>
@@ -231,6 +205,12 @@
 
 <p><font size=4 color=#87CEFA><b>PIE:</b></font><br>PIE(Position-Independent Executable, 位置无关可执行文件)技术与 ASLR 技术类似,ASLR 将程序运行时的堆栈以及共享库的加载地址随机化, 而 PIE 技术则在编译时将程序编译为位置无关, 即程序运行时各个段（如代码段等）加载的虚拟地址也是在装载时才确定。这就意味着, 在 PIE 和 ASLR 同时开启的情况下, 攻击者将对程序的内存布局一无所知, 传统的改写<br>GOT 表项的方法也难以进行, 因为攻击者不能获得程序的.got 段的虚地址。<br>若开启一般需在攻击时泄露地址信息</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">gcc -o hello test.c  &#x2F;&#x2F; 默认情况下，不开启PIE</span><br><span class="line">gcc -fpie -pie -o hello test.c  &#x2F;&#x2F; 开启PIE，此时强度为1</span><br><span class="line">gcc -fPIE -pie -o hello test.c  &#x2F;&#x2F; 开启PIE，此时为最高强度2</span><br><span class="line">(还与运行时系统ALSR设置有关）</span><br></pre></td></tr></table></figure>
+
+<p><font size=4 color=#87CEFA><b>FORTIFY:</b></font><br>开启了FORTIFY_SOURCE对格式化字符串有两个影响：  </p>
+<ol>
+<li>包含%n的格式化字符串不能位于程序内存中的可写地址。</li>
+<li>当使用位置参数时，必须使用范围内的所有参数。所以如果要使用%7$x，你必须同时使用1,2,3,4,5和6。<br>就是说格式化字符串漏洞利用起来就比较困难了。</li>
+</ol>
 ]]></content>
       <tags>
         <tag>xctf</tag>
@@ -267,6 +247,138 @@
 ]]></content>
       <tags>
         <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>hexo安装</title>
+    <url>/2020/05/18/hexo%E5%AE%89%E8%A3%85/</url>
+    <content><![CDATA[<p>现在网上很多教程都太老，过时了，导致我搭建的时候绕了很多弯路，好在最后还是被我搭建好了，记一下安装过程。</p>
+<a id="more"></a>
+<hr>
+<h1 id="hexo安装"><a href="#hexo安装" class="headerlink" title="hexo安装"></a>hexo安装</h1><h3 id="首先运行一个容器"><a href="#首先运行一个容器" class="headerlink" title="首先运行一个容器"></a>首先运行一个容器</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run -itd -p 80:4000 --name hexo ubuntu bash</span><br></pre></td></tr></table></figure>
+<p>这里以在ubuntu中搭建为例子</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker exec -it hexo env LANG&#x3D;C.UTF-8 bash</span><br></pre></td></tr></table></figure>
+<p>其中<code>env LANG=C.UTF-8</code>为环境变量，这样在docker容器中可以输入中文</p>
+<h3 id="安装git-curl-wget"><a href="#安装git-curl-wget" class="headerlink" title="安装git,curl,wget"></a>安装git,curl,wget</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apt-get update</span><br><span class="line">apt-get -y install git curl wget</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装nodejs"><a href="#安装nodejs" class="headerlink" title="安装nodejs"></a>安装nodejs</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apt-get install nodejs</span><br><span class="line">apt-get install npm</span><br><span class="line">npm i -g npm</span><br><span class="line"># 重启命令行，查看更新后的版本 npm -v</span><br><span class="line">npm install -g n</span><br><span class="line">n 12.18.2</span><br><span class="line"># 重启命令行，查看更新后的版本 nodejs -v</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装cnpm"><a href="#安装cnpm" class="headerlink" title="安装cnpm"></a>安装cnpm</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install -g cnpm --registry&#x3D;https:&#x2F;&#x2F;registry.npm.taobao.org</span><br></pre></td></tr></table></figure>
+<h3 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h3><p>使用cnpm安装hexo</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cnpm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+<p>然后创建一个文件夹，命名随意，将hexo的资源都放进去</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd ~</span><br><span class="line">mkdir hexo</span><br><span class="line">cd hexo </span><br><span class="line">hexo init</span><br></pre></td></tr></table></figure>
+<h3 id="Hexo的更新"><a href="#Hexo的更新" class="headerlink" title="Hexo的更新"></a>Hexo的更新</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm update hexo</span><br></pre></td></tr></table></figure>
+<p>使用<code>hexo -v</code>查看hexo当前版本</p>
+]]></content>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用python更改一个文件夹中所有文件内容</title>
+    <url>/2020/05/29/note/note2/</url>
+    <content><![CDATA[<h1 id="python设置中文编码"><a href="#python设置中文编码" class="headerlink" title="python设置中文编码"></a>python设置中文编码</h1><p>在程序的开头加上一句</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br></pre></td></tr></table></figure>
+<p>其中第一行是将py文件设置成可直接使用<code>./name.py</code>执行<br>第一行不适用于windows，而且中间不能有空格<br>第二行等式两边不能有空格，加上第二行就可以中文输出了</p>
+<h1 id="python正则表达式"><a href="#python正则表达式" class="headerlink" title="python正则表达式"></a>python正则表达式</h1><h2 id="re-search方法"><a href="#re-search方法" class="headerlink" title="re.search方法"></a>re.search方法</h2><p>一、函数语法</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">re.search(pattern, string, flags=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>二、函数参数说明</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>pattern</td>
+<td>匹配的正则表达式</td>
+</tr>
+<tr>
+<td>string</td>
+<td>要匹配的字符串</td>
+</tr>
+<tr>
+<td>flags</td>
+<td>标志位，用于控制正则表达式的匹配方式，如：是否区分大小写，多行匹配等等</td>
+</tr>
+</tbody></table>
+<p>匹配成功re.search方法返回一个匹配的对象，否则返回None。<br>我们可以使用group(num) 或 groups() 匹配对象函数来获取匹配表达式。</p>
+<table>
+<thead>
+<tr>
+<th>匹配对象方法</th>
+<th>函数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>group(num=0)</td>
+<td>匹配的整个表达式的字符串，group() 可以一次输入多个组号，在这种情况下它将返回一个包含那些组所对应值的元组</td>
+</tr>
+<tr>
+<td>groups()</td>
+<td>返回一个包含所有小组字符串的元组，从 1 到 所含的小组号。</td>
+</tr>
+</tbody></table>
+<p>三、实例</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*- </span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line">print(re.search(<span class="string">'www'</span>, <span class="string">'www.runoob.com'</span>).span())  <span class="comment"># 在起始位置匹配</span></span><br><span class="line">print(re.search(<span class="string">'com'</span>, <span class="string">'www.runoob.com'</span>).span())         <span class="comment"># 不在起始位置匹配</span></span><br></pre></td></tr></table></figure>
+<p>以上实例运行输出结果为：</p>
+<blockquote>
+<p>(0, 3)<br>(11, 14)</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line">line = <span class="string">"Cats are smarter than dogs"</span>;</span><br><span class="line"> </span><br><span class="line">searchObj = re.search( <span class="string">r'(.*) are (.*?) .*'</span>, line, re.M|re.I)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> searchObj:</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"searchObj.group() : "</span>, searchObj.group()</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"searchObj.group(1) : "</span>, searchObj.group(<span class="number">1</span>)</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"searchObj.group(2) : "</span>, searchObj.group(<span class="number">2</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"Nothing found!!"</span></span><br></pre></td></tr></table></figure>
+<p>以上实例执行结果如下：</p>
+<blockquote>
+<p>searchObj.group() :  Cats are smarter than dogs<br>searchObj.group(1) :  Cats<br>searchObj.group(2) :  smarter</p>
+</blockquote>
+<h2 id="findall"><a href="#findall" class="headerlink" title="findall"></a>findall</h2><p>在字符串中找到正则表达式所匹配的所有子串，并返回一个列表，如果没有找到匹配的，则返回空列表。<br><strong>注意</strong>： match 和 search 是匹配一次 findall 匹配所有。<br>语法格式为：</p>
+<blockquote>
+<p>findall(string[, pos[, endpos]])  </p>
+</blockquote>
+<p>参数：</p>
+<ul>
+<li><b>string:</b>待匹配的字符串。</li>
+<li><b>pos:</b>可选参数，指定字符串的起始位置，默认为 0。</li>
+<li><b>endpos:</b> 可选参数，指定字符串的结束位置，默认为字符串的长度。</li>
+</ul>
+<p>查找字符串中的所有数字：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># -*- coding:UTF8 -*-</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line">pattern = re.compile(<span class="string">r'\d+'</span>)   <span class="comment"># 查找数字</span></span><br><span class="line">result1 = pattern.findall(<span class="string">'runoob 123 google 456'</span>)</span><br><span class="line">result2 = pattern.findall(<span class="string">'run88oob123google456'</span>, <span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line"> </span><br><span class="line">print(result1)</span><br><span class="line">print(result2)</span><br></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<blockquote>
+<p>[‘123’, ‘456’]<br>[‘88’, ‘12’]</p>
+</blockquote>
+<h2 id="检索和替换"><a href="#检索和替换" class="headerlink" title="检索和替换"></a>检索和替换</h2><p>Python 的 re 模块提供了re.sub用于替换字符串中的匹配项。<br>语法：</p>
+<blockquote>
+<p>re.sub(pattern, repl, string, count=0, flags=0)</p>
+</blockquote>
+<p>参数：  </p>
+<ul>
+<li>pattern : 正则中的模式字符串。</li>
+<li>repl : 替换的字符串，也可为一个函数。</li>
+<li>string : 要被查找替换的原始字符串。</li>
+<li>count : 模式匹配后替换的最大次数，默认 0 表示替换所有的匹配。</li>
+</ul>
+<p>实例:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line">phone = <span class="string">"2004-959-559 # 这是一个国外电话号码"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># 删除字符串中的 Python注释 </span></span><br><span class="line">num = re.sub(<span class="string">r'#.*$'</span>, <span class="string">""</span>, phone)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"电话号码是: "</span>, num</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 删除非数字(-)的字符串 </span></span><br><span class="line">num = re.sub(<span class="string">r'\D'</span>, <span class="string">""</span>, phone)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"电话号码是 : "</span>, num</span><br></pre></td></tr></table></figure>
+<p>以上实例执行结果如下：</p>
+<blockquote>
+<p>电话号码是:  2004-959-559<br>电话号码是 :  2004959559</p>
+</blockquote>
+<p><b>repl 参数是一个函数</b></p>
+<p>以下实例中将字符串中的匹配的数字乘以 2：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 将匹配的数字乘以 2</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">double</span><span class="params">(matched)</span>:</span></span><br><span class="line">    value = int(matched.group(<span class="string">'value'</span>))</span><br><span class="line">    <span class="keyword">return</span> str(value * <span class="number">2</span>)</span><br><span class="line"> </span><br><span class="line">s = <span class="string">'A23G4HFD567'</span></span><br><span class="line">print(re.sub(<span class="string">'(?P&lt;value&gt;\d+)'</span>, double, s))</span><br></pre></td></tr></table></figure>
+<p>执行输出结果为：</p>
+<blockquote>
+<p>A46G8HFD1134</p>
+</blockquote>
+<h1 id="使用python更换文件内容"><a href="#使用python更换文件内容" class="headerlink" title="使用python更换文件内容"></a>使用python更换文件内容</h1><p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cos_to_cdn</span><span class="params">(path,patterm,repl)</span>:</span></span><br><span class="line">    files = os.listdir(path)</span><br><span class="line">    <span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">        <span class="keyword">if</span> os.path.isdir(path+<span class="string">'/'</span>+file):</span><br><span class="line">            cos_to_cdn(path+<span class="string">'/'</span>+file,patterm,repl)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            s = <span class="string">''</span></span><br><span class="line">            f = open(path+<span class="string">'/'</span>+file,<span class="string">'r'</span>)</span><br><span class="line">            <span class="keyword">for</span> line <span class="keyword">in</span> f:</span><br><span class="line">                <span class="keyword">if</span> re.findall(patterm,line):</span><br><span class="line">                    line = re.sub(patterm,repl,line)</span><br><span class="line">                s += line</span><br><span class="line">            f.close()</span><br><span class="line">            fw = open(path+<span class="string">'/'</span>+file,<span class="string">'w'</span>)</span><br><span class="line">            fw.write(s)</span><br><span class="line">            fw.close()</span><br><span class="line"></span><br><span class="line">path = <span class="string">r'******'</span>   <span class="comment">#输入要替换的文件夹</span></span><br><span class="line">patterm = <span class="string">r'*********'</span>  <span class="comment">#要替换的字符串的正则表达式</span></span><br><span class="line">repl = <span class="string">r'*********'</span> <span class="comment">#替换后的字符串</span></span><br><span class="line">cos_to_cdn(path,patterm,repl)</span><br></pre></td></tr></table></figure>
+<p>此脚本可以迭代替换，也就是说如果文件夹中还有文件夹，则子文件夹中的内容也会被替换</p>
+]]></content>
+      <tags>
+        <tag>note</tag>
       </tags>
   </entry>
   <entry>
@@ -426,112 +538,6 @@
 <h2 id="第四步"><a href="#第四步" class="headerlink" title="第四步"></a>第四步</h2><p>修改<code>/root/.profile</code>文件 </p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi &#x2F;root&#x2F;.profile</span><br></pre></td></tr></table></figure>
 <p>将文件末尾的<code>mesg n || true</code>这一行修改成<code>tty -s&amp;&amp;mesg n || true</code>，保存<br>重启系统，输入root用户名和密码，登陆系统</p>
-]]></content>
-      <tags>
-        <tag>note</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>使用python更改一个文件夹中所有文件内容</title>
-    <url>/2020/05/29/note/note2/</url>
-    <content><![CDATA[<h1 id="python设置中文编码"><a href="#python设置中文编码" class="headerlink" title="python设置中文编码"></a>python设置中文编码</h1><p>在程序的开头加上一句</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br></pre></td></tr></table></figure>
-<p>其中第一行是将py文件设置成可直接使用<code>./name.py</code>执行<br>第一行不适用于windows，而且中间不能有空格<br>第二行等式两边不能有空格，加上第二行就可以中文输出了</p>
-<h1 id="python正则表达式"><a href="#python正则表达式" class="headerlink" title="python正则表达式"></a>python正则表达式</h1><h2 id="re-search方法"><a href="#re-search方法" class="headerlink" title="re.search方法"></a>re.search方法</h2><p>一、函数语法</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">re.search(pattern, string, flags=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
-
-<p>二、函数参数说明</p>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>pattern</td>
-<td>匹配的正则表达式</td>
-</tr>
-<tr>
-<td>string</td>
-<td>要匹配的字符串</td>
-</tr>
-<tr>
-<td>flags</td>
-<td>标志位，用于控制正则表达式的匹配方式，如：是否区分大小写，多行匹配等等</td>
-</tr>
-</tbody></table>
-<p>匹配成功re.search方法返回一个匹配的对象，否则返回None。<br>我们可以使用group(num) 或 groups() 匹配对象函数来获取匹配表达式。</p>
-<table>
-<thead>
-<tr>
-<th>匹配对象方法</th>
-<th>函数</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>group(num=0)</td>
-<td>匹配的整个表达式的字符串，group() 可以一次输入多个组号，在这种情况下它将返回一个包含那些组所对应值的元组</td>
-</tr>
-<tr>
-<td>groups()</td>
-<td>返回一个包含所有小组字符串的元组，从 1 到 所含的小组号。</td>
-</tr>
-</tbody></table>
-<p>三、实例</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*- </span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line">print(re.search(<span class="string">'www'</span>, <span class="string">'www.runoob.com'</span>).span())  <span class="comment"># 在起始位置匹配</span></span><br><span class="line">print(re.search(<span class="string">'com'</span>, <span class="string">'www.runoob.com'</span>).span())         <span class="comment"># 不在起始位置匹配</span></span><br></pre></td></tr></table></figure>
-<p>以上实例运行输出结果为：</p>
-<blockquote>
-<p>(0, 3)<br>(11, 14)</p>
-</blockquote>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line">line = <span class="string">"Cats are smarter than dogs"</span>;</span><br><span class="line"> </span><br><span class="line">searchObj = re.search( <span class="string">r'(.*) are (.*?) .*'</span>, line, re.M|re.I)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> searchObj:</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"searchObj.group() : "</span>, searchObj.group()</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"searchObj.group(1) : "</span>, searchObj.group(<span class="number">1</span>)</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"searchObj.group(2) : "</span>, searchObj.group(<span class="number">2</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"Nothing found!!"</span></span><br></pre></td></tr></table></figure>
-<p>以上实例执行结果如下：</p>
-<blockquote>
-<p>searchObj.group() :  Cats are smarter than dogs<br>searchObj.group(1) :  Cats<br>searchObj.group(2) :  smarter</p>
-</blockquote>
-<h2 id="findall"><a href="#findall" class="headerlink" title="findall"></a>findall</h2><p>在字符串中找到正则表达式所匹配的所有子串，并返回一个列表，如果没有找到匹配的，则返回空列表。<br><strong>注意</strong>： match 和 search 是匹配一次 findall 匹配所有。<br>语法格式为：</p>
-<blockquote>
-<p>findall(string[, pos[, endpos]])  </p>
-</blockquote>
-<p>参数：</p>
-<ul>
-<li><b>string:</b>待匹配的字符串。</li>
-<li><b>pos:</b>可选参数，指定字符串的起始位置，默认为 0。</li>
-<li><b>endpos:</b> 可选参数，指定字符串的结束位置，默认为字符串的长度。</li>
-</ul>
-<p>查找字符串中的所有数字：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># -*- coding:UTF8 -*-</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line">pattern = re.compile(<span class="string">r'\d+'</span>)   <span class="comment"># 查找数字</span></span><br><span class="line">result1 = pattern.findall(<span class="string">'runoob 123 google 456'</span>)</span><br><span class="line">result2 = pattern.findall(<span class="string">'run88oob123google456'</span>, <span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line"> </span><br><span class="line">print(result1)</span><br><span class="line">print(result2)</span><br></pre></td></tr></table></figure>
-<p>输出结果：</p>
-<blockquote>
-<p>[‘123’, ‘456’]<br>[‘88’, ‘12’]</p>
-</blockquote>
-<h2 id="检索和替换"><a href="#检索和替换" class="headerlink" title="检索和替换"></a>检索和替换</h2><p>Python 的 re 模块提供了re.sub用于替换字符串中的匹配项。<br>语法：</p>
-<blockquote>
-<p>re.sub(pattern, repl, string, count=0, flags=0)</p>
-</blockquote>
-<p>参数：  </p>
-<ul>
-<li>pattern : 正则中的模式字符串。</li>
-<li>repl : 替换的字符串，也可为一个函数。</li>
-<li>string : 要被查找替换的原始字符串。</li>
-<li>count : 模式匹配后替换的最大次数，默认 0 表示替换所有的匹配。</li>
-</ul>
-<p>实例:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line">phone = <span class="string">"2004-959-559 # 这是一个国外电话号码"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># 删除字符串中的 Python注释 </span></span><br><span class="line">num = re.sub(<span class="string">r'#.*$'</span>, <span class="string">""</span>, phone)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"电话号码是: "</span>, num</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 删除非数字(-)的字符串 </span></span><br><span class="line">num = re.sub(<span class="string">r'\D'</span>, <span class="string">""</span>, phone)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"电话号码是 : "</span>, num</span><br></pre></td></tr></table></figure>
-<p>以上实例执行结果如下：</p>
-<blockquote>
-<p>电话号码是:  2004-959-559<br>电话号码是 :  2004959559</p>
-</blockquote>
-<p><b>repl 参数是一个函数</b></p>
-<p>以下实例中将字符串中的匹配的数字乘以 2：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 将匹配的数字乘以 2</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">double</span><span class="params">(matched)</span>:</span></span><br><span class="line">    value = int(matched.group(<span class="string">'value'</span>))</span><br><span class="line">    <span class="keyword">return</span> str(value * <span class="number">2</span>)</span><br><span class="line"> </span><br><span class="line">s = <span class="string">'A23G4HFD567'</span></span><br><span class="line">print(re.sub(<span class="string">'(?P&lt;value&gt;\d+)'</span>, double, s))</span><br></pre></td></tr></table></figure>
-<p>执行输出结果为：</p>
-<blockquote>
-<p>A46G8HFD1134</p>
-</blockquote>
-<h1 id="使用python更换文件内容"><a href="#使用python更换文件内容" class="headerlink" title="使用python更换文件内容"></a>使用python更换文件内容</h1><p>代码如下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cos_to_cdn</span><span class="params">(path,patterm,repl)</span>:</span></span><br><span class="line">    files = os.listdir(path)</span><br><span class="line">    <span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">        <span class="keyword">if</span> os.path.isdir(path+<span class="string">'/'</span>+file):</span><br><span class="line">            cos_to_cdn(path+<span class="string">'/'</span>+file,patterm,repl)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            s = <span class="string">''</span></span><br><span class="line">            f = open(path+<span class="string">'/'</span>+file,<span class="string">'r'</span>)</span><br><span class="line">            <span class="keyword">for</span> line <span class="keyword">in</span> f:</span><br><span class="line">                <span class="keyword">if</span> re.findall(patterm,line):</span><br><span class="line">                    line = re.sub(patterm,repl,line)</span><br><span class="line">                s += line</span><br><span class="line">            f.close()</span><br><span class="line">            fw = open(path+<span class="string">'/'</span>+file,<span class="string">'w'</span>)</span><br><span class="line">            fw.write(s)</span><br><span class="line">            fw.close()</span><br><span class="line"></span><br><span class="line">path = <span class="string">r'******'</span>   <span class="comment">#输入要替换的文件夹</span></span><br><span class="line">patterm = <span class="string">r'*********'</span>  <span class="comment">#要替换的字符串的正则表达式</span></span><br><span class="line">repl = <span class="string">r'*********'</span> <span class="comment">#替换后的字符串</span></span><br><span class="line">cos_to_cdn(path,patterm,repl)</span><br></pre></td></tr></table></figure>
-<p>此脚本可以迭代替换，也就是说如果文件夹中还有文件夹，则子文件夹中的内容也会被替换</p>
 ]]></content>
       <tags>
         <tag>note</tag>

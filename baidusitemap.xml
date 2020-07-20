@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://xsblog.xyz/2020/06/06/xctf%E6%96%B0%E6%89%8B%E5%8C%BA/</loc>
-    <lastmod>2020-07-09</lastmod>
-  </url>  <url>
     <loc>http://xsblog.xyz/2020/05/29/checksec%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/</loc>
+    <lastmod>2020-07-20</lastmod>
+  </url>  <url>
+    <loc>http://xsblog.xyz/2020/06/06/xctf%E6%96%B0%E6%89%8B%E5%8C%BA/</loc>
     <lastmod>2020-07-09</lastmod>
   </url>  <url>
     <loc>http://xsblog.xyz/2020/06/07/xctf%E8%BF%9B%E9%98%B6%E5%8C%BA/</loc>
@@ -19,6 +19,9 @@
     <loc>http://xsblog.xyz/2020/06/10/IDA%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95/</loc>
     <lastmod>2020-07-09</lastmod>
   </url>  <url>
+    <loc>http://xsblog.xyz/2020/05/29/note/note2/</loc>
+    <lastmod>2020-07-09</lastmod>
+  </url>  <url>
     <loc>http://xsblog.xyz/2020/05/26/note/note1/</loc>
     <lastmod>2020-07-09</lastmod>
   </url>  <url>
@@ -26,9 +29,6 @@
     <lastmod>2020-07-09</lastmod>
   </url>  <url>
     <loc>http://xsblog.xyz/2020/05/29/note/%E9%85%8D%E7%BD%AEubuntu/</loc>
-    <lastmod>2020-07-09</lastmod>
-  </url>  <url>
-    <loc>http://xsblog.xyz/2020/05/29/note/note2/</loc>
     <lastmod>2020-07-09</lastmod>
   </url>
 </urlset>
