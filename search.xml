@@ -20,38 +20,6 @@
       </tags>
   </entry>
   <entry>
-    <title>hexo同时部署到github和coding</title>
-    <url>/2020/07/06/hexo%E5%90%8C%E6%97%B6%E9%83%A8%E7%BD%B2%E5%88%B0github%E5%92%8Ccoding/</url>
-    <content><![CDATA[<p>github服务器访问太慢，尝试同时搭建到github和coding</p>
-<a id="more"></a>
-<hr>
-<h2 id="配置github"><a href="#配置github" class="headerlink" title="配置github"></a>配置github</h2><p>首先需要创建一个仓库，名字为<code>yourname</code>.github.io，其中<code>yourname</code>为你注册时的用户名<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-15-08-11.png" alt="2020-07-06-15-08-11"><br>在setting-&gt;Options-&gt;GitHub Pages里面设置page服务，一般已经配置好了<br>然后就是将ssh密钥传到github上，首先在本地生成密钥</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;your_github_email@example.com&quot;</span><br></pre></td></tr></table></figure>
-<p>运行命令连续敲三个空格就可以了，会在<code>/root/.ssh</code>生成密钥文件<br>打开github设置，Settings-&gt;SSH and GPG keys，添加密钥，名字随意，key的内容使将刚刚生成的密钥文件id_rsa.pub中所有的内容复制过去<br>运行以下命令</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-<p>出现以下提示表示配置成功</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Hi xxxxxx! You&#39;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
-
-<h2 id="配置coding"><a href="#配置coding" class="headerlink" title="配置coding"></a>配置coding</h2><p>coding和github应该使用同一个邮箱注册<br>新建项目（DevOps项目），其他类型的项目没有page服务，项目名称与用户名相同，在持续部署中找到静态网站，实名认证之后发布静态网站<br>在个人设置里添加ssh公钥，和github使用的公钥一样复制就行<br>运行以下命令</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh -T git@coding.net</span><br></pre></td></tr></table></figure>
-<p>出现以下提示表示配置成功</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Coding 提示: Hello xxxxx, You&#39;ve connected to Coding.net via SSH. This is a personal key.</span><br><span class="line">xxxxxx，你好，你已经通过 SSH 协议认证 Coding.net 服务，这是一个个人公钥.</span><br><span class="line">公钥指纹：xx:xx:xx:xx:xx:xx:xx</span><br></pre></td></tr></table></figure>
-
-<h2 id="配置服务端"><a href="#配置服务端" class="headerlink" title="配置服务端"></a>配置服务端</h2><p>配置hexo根目录文件_config.yml<br>添加以下配置</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo:</span><br><span class="line">    github: git@github.com:yourname&#x2F;yourname.github.io.git</span><br><span class="line">    coding: git@e.coding.net:yourname&#x2F;yourname&#x2F;yourname.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
-<p>安装一键部署插件</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-<p>接下来就是配置git  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git config --global user.email &quot;you@example.com&quot;</span><br><span class="line">git config --global user.name &quot;Your Name&quot;</span><br></pre></td></tr></table></figure>
-<p>这里邮箱为注册邮箱，名字随意<br>然后<code>hexo g&amp;&amp;hexo d</code>即可实现部署<br>对于github，访问<code>yourname.github.io</code>测试是否可以成功访问<br>对于coding，访问其静态网站服务所提供的网址来测试  </p>
-<h2 id="域名绑定"><a href="#域名绑定" class="headerlink" title="域名绑定"></a>域名绑定</h2><p>我用的是阿里云，添加解析<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-15-55-51.png" alt="2020-07-06-15-55-51"><br>在github的page服务出绑定刚添加的解析域名<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-15-59-27.png" alt="2020-07-06-15-59-27"><br>在coding中也可以绑定域名，强制配置https<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-16-02-00.png" alt="2020-07-06-16-02-00">   </p>
-<p>对于github，还要在source文件夹里面新建CNAME文件，里面加入所绑定的域名，不然每次部署之后，绑定的域名就会消失<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-16-26-38.png" alt="2020-07-06-16-26-38"><br>以上就全部配置完毕了</p>
-]]></content>
-      <tags>
-        <tag>hexo</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>checksec工具使用</title>
     <url>/2020/05/29/checksec%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<p>checksec在ctf中使用非常多，主要用于pwn题，记录一下使用方法。</p>
@@ -83,6 +51,38 @@
       <tags>
         <tag>xctf</tag>
         <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>hexo同时部署到github和coding</title>
+    <url>/2020/07/06/hexo%E5%90%8C%E6%97%B6%E9%83%A8%E7%BD%B2%E5%88%B0github%E5%92%8Ccoding/</url>
+    <content><![CDATA[<p>github服务器访问太慢，尝试同时搭建到github和coding</p>
+<a id="more"></a>
+<hr>
+<h2 id="配置github"><a href="#配置github" class="headerlink" title="配置github"></a>配置github</h2><p>首先需要创建一个仓库，名字为<code>yourname</code>.github.io，其中<code>yourname</code>为你注册时的用户名<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-15-08-11.png" alt="2020-07-06-15-08-11"><br>在setting-&gt;Options-&gt;GitHub Pages里面设置page服务，一般已经配置好了<br>然后就是将ssh密钥传到github上，首先在本地生成密钥</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;your_github_email@example.com&quot;</span><br></pre></td></tr></table></figure>
+<p>运行命令连续敲三个空格就可以了，会在<code>/root/.ssh</code>生成密钥文件<br>打开github设置，Settings-&gt;SSH and GPG keys，添加密钥，名字随意，key的内容使将刚刚生成的密钥文件id_rsa.pub中所有的内容复制过去<br>运行以下命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+<p>出现以下提示表示配置成功</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Hi xxxxxx! You&#39;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置coding"><a href="#配置coding" class="headerlink" title="配置coding"></a>配置coding</h2><p>coding和github应该使用同一个邮箱注册<br>新建项目（DevOps项目），其他类型的项目没有page服务，项目名称与用户名相同，在持续部署中找到静态网站，实名认证之后发布静态网站<br>在个人设置里添加ssh公钥，和github使用的公钥一样复制就行<br>运行以下命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh -T git@coding.net</span><br></pre></td></tr></table></figure>
+<p>出现以下提示表示配置成功</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Coding 提示: Hello xxxxx, You&#39;ve connected to Coding.net via SSH. This is a personal key.</span><br><span class="line">xxxxxx，你好，你已经通过 SSH 协议认证 Coding.net 服务，这是一个个人公钥.</span><br><span class="line">公钥指纹：xx:xx:xx:xx:xx:xx:xx</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置服务端"><a href="#配置服务端" class="headerlink" title="配置服务端"></a>配置服务端</h2><p>配置hexo根目录文件_config.yml<br>添加以下配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo:</span><br><span class="line">    github: git@github.com:yourname&#x2F;yourname.github.io.git</span><br><span class="line">    coding: git@e.coding.net:yourname&#x2F;yourname&#x2F;yourname.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+<p>安装一键部署插件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<p>接下来就是配置git  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git config --global user.email &quot;you@example.com&quot;</span><br><span class="line">git config --global user.name &quot;Your Name&quot;</span><br></pre></td></tr></table></figure>
+<p>这里邮箱为注册邮箱，名字随意<br>然后<code>hexo g&amp;&amp;hexo d</code>即可实现部署<br>对于github，访问<code>yourname.github.io</code>测试是否可以成功访问<br>对于coding，访问其静态网站服务所提供的网址来测试  </p>
+<h2 id="域名绑定"><a href="#域名绑定" class="headerlink" title="域名绑定"></a>域名绑定</h2><p>我用的是阿里云，添加解析<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-15-55-51.png" alt="2020-07-06-15-55-51"><br>在github的page服务出绑定刚添加的解析域名<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-15-59-27.png" alt="2020-07-06-15-59-27"><br>在coding中也可以绑定域名，强制配置https<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-16-02-00.png" alt="2020-07-06-16-02-00">   </p>
+<p>对于github，还要在source文件夹里面新建CNAME文件，里面加入所绑定的域名，不然每次部署之后，绑定的域名就会消失<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-16-26-38.png" alt="2020-07-06-16-26-38"><br>以上就全部配置完毕了</p>
+]]></content>
+      <tags>
+        <tag>hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -276,29 +276,106 @@
       </tags>
   </entry>
   <entry>
-    <title>配置ubuntu</title>
-    <url>/2020/05/29/note/%E9%85%8D%E7%BD%AEubuntu/</url>
-    <content><![CDATA[<h1 id="ubuntu允许以root用户登录ssh"><a href="#ubuntu允许以root用户登录ssh" class="headerlink" title="ubuntu允许以root用户登录ssh"></a>ubuntu允许以root用户登录ssh</h1><p>修改配置文件</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo vi &#x2F;etc&#x2F;ssh&#x2F;sshd_config</span><br></pre></td></tr></table></figure>
-<p>找到下面配置：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Authentication:</span><br><span class="line">LoginGraceTime 120</span><br><span class="line">PermitRootLogin prohibit-password</span><br><span class="line">StrictModes yes</span><br></pre></td></tr></table></figure>
-<p>更改为：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Authentication:</span><br><span class="line">LoginGraceTime 120</span><br><span class="line">#PermitRootLogin prohibit-password</span><br><span class="line">PermitRootLogin yes</span><br><span class="line">StrictModes yes</span><br></pre></td></tr></table></figure>
-<p>重启ssh</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo service ssh restart</span><br></pre></td></tr></table></figure>
-<p>接下来就可使用root登录了</p>
-<h1 id="使用root登录Ubuntu系统"><a href="#使用root登录Ubuntu系统" class="headerlink" title="使用root登录Ubuntu系统"></a>使用root登录Ubuntu系统</h1><h2 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h2><p>以普通用户登录系统，创建root用户的密码<br>在终端输入命令：<code>sudo passwd root</code><br>然后输入你要设置的密码，这样就完成了设置root用户密码的步骤</p>
-<h2 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h2><p>修改文件<code>/usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf</code>文件，增加两行：  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">greeter-show-manual-login&#x3D;true</span><br><span class="line">all-guest&#x3D;false</span><br></pre></td></tr></table></figure>
-<p>保存</p>
-<h2 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h2><p>进入<code>/etc/pam.d</code>目录，修改<code>gdm-autologin</code>和<code>gdm-password</code>文件</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi gdm-autologin</span><br></pre></td></tr></table></figure>
-<p>注释掉auth required pam_succeed_if.so user != root quiet_success这一行，保存</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi gdm-password</span><br></pre></td></tr></table></figure>
-<p>注释掉<code>auth required pam_succeed_if.so user != root quiet_success</code>这一行，保存</p>
-<h2 id="第四步"><a href="#第四步" class="headerlink" title="第四步"></a>第四步</h2><p>修改<code>/root/.profile</code>文件 </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi &#x2F;root&#x2F;.profile</span><br></pre></td></tr></table></figure>
-<p>将文件末尾的<code>mesg n || true</code>这一行修改成<code>tty -s&amp;&amp;mesg n || true</code>，保存<br>重启系统，输入root用户名和密码，登陆系统</p>
+    <title>使用python更改一个文件夹中所有文件内容</title>
+    <url>/2020/05/29/note/note2/</url>
+    <content><![CDATA[<h1 id="python设置中文编码"><a href="#python设置中文编码" class="headerlink" title="python设置中文编码"></a>python设置中文编码</h1><p>在程序的开头加上一句</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br></pre></td></tr></table></figure>
+<p>其中第一行是将py文件设置成可直接使用<code>./name.py</code>执行<br>第一行不适用于windows，而且中间不能有空格<br>第二行等式两边不能有空格，加上第二行就可以中文输出了</p>
+<h1 id="python正则表达式"><a href="#python正则表达式" class="headerlink" title="python正则表达式"></a>python正则表达式</h1><h2 id="re-search方法"><a href="#re-search方法" class="headerlink" title="re.search方法"></a>re.search方法</h2><p>一、函数语法</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">re.search(pattern, string, flags=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>二、函数参数说明</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>pattern</td>
+<td>匹配的正则表达式</td>
+</tr>
+<tr>
+<td>string</td>
+<td>要匹配的字符串</td>
+</tr>
+<tr>
+<td>flags</td>
+<td>标志位，用于控制正则表达式的匹配方式，如：是否区分大小写，多行匹配等等</td>
+</tr>
+</tbody></table>
+<p>匹配成功re.search方法返回一个匹配的对象，否则返回None。<br>我们可以使用group(num) 或 groups() 匹配对象函数来获取匹配表达式。</p>
+<table>
+<thead>
+<tr>
+<th>匹配对象方法</th>
+<th>函数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>group(num=0)</td>
+<td>匹配的整个表达式的字符串，group() 可以一次输入多个组号，在这种情况下它将返回一个包含那些组所对应值的元组</td>
+</tr>
+<tr>
+<td>groups()</td>
+<td>返回一个包含所有小组字符串的元组，从 1 到 所含的小组号。</td>
+</tr>
+</tbody></table>
+<p>三、实例</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*- </span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line">print(re.search(<span class="string">'www'</span>, <span class="string">'www.runoob.com'</span>).span())  <span class="comment"># 在起始位置匹配</span></span><br><span class="line">print(re.search(<span class="string">'com'</span>, <span class="string">'www.runoob.com'</span>).span())         <span class="comment"># 不在起始位置匹配</span></span><br></pre></td></tr></table></figure>
+<p>以上实例运行输出结果为：</p>
+<blockquote>
+<p>(0, 3)<br>(11, 14)</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line">line = <span class="string">"Cats are smarter than dogs"</span>;</span><br><span class="line"> </span><br><span class="line">searchObj = re.search( <span class="string">r'(.*) are (.*?) .*'</span>, line, re.M|re.I)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> searchObj:</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"searchObj.group() : "</span>, searchObj.group()</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"searchObj.group(1) : "</span>, searchObj.group(<span class="number">1</span>)</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"searchObj.group(2) : "</span>, searchObj.group(<span class="number">2</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"Nothing found!!"</span></span><br></pre></td></tr></table></figure>
+<p>以上实例执行结果如下：</p>
+<blockquote>
+<p>searchObj.group() :  Cats are smarter than dogs<br>searchObj.group(1) :  Cats<br>searchObj.group(2) :  smarter</p>
+</blockquote>
+<h2 id="findall"><a href="#findall" class="headerlink" title="findall"></a>findall</h2><p>在字符串中找到正则表达式所匹配的所有子串，并返回一个列表，如果没有找到匹配的，则返回空列表。<br><strong>注意</strong>： match 和 search 是匹配一次 findall 匹配所有。<br>语法格式为：</p>
+<blockquote>
+<p>findall(string[, pos[, endpos]])  </p>
+</blockquote>
+<p>参数：</p>
+<ul>
+<li><b>string:</b>待匹配的字符串。</li>
+<li><b>pos:</b>可选参数，指定字符串的起始位置，默认为 0。</li>
+<li><b>endpos:</b> 可选参数，指定字符串的结束位置，默认为字符串的长度。</li>
+</ul>
+<p>查找字符串中的所有数字：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># -*- coding:UTF8 -*-</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line">pattern = re.compile(<span class="string">r'\d+'</span>)   <span class="comment"># 查找数字</span></span><br><span class="line">result1 = pattern.findall(<span class="string">'runoob 123 google 456'</span>)</span><br><span class="line">result2 = pattern.findall(<span class="string">'run88oob123google456'</span>, <span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line"> </span><br><span class="line">print(result1)</span><br><span class="line">print(result2)</span><br></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<blockquote>
+<p>[‘123’, ‘456’]<br>[‘88’, ‘12’]</p>
+</blockquote>
+<h2 id="检索和替换"><a href="#检索和替换" class="headerlink" title="检索和替换"></a>检索和替换</h2><p>Python 的 re 模块提供了re.sub用于替换字符串中的匹配项。<br>语法：</p>
+<blockquote>
+<p>re.sub(pattern, repl, string, count=0, flags=0)</p>
+</blockquote>
+<p>参数：  </p>
+<ul>
+<li>pattern : 正则中的模式字符串。</li>
+<li>repl : 替换的字符串，也可为一个函数。</li>
+<li>string : 要被查找替换的原始字符串。</li>
+<li>count : 模式匹配后替换的最大次数，默认 0 表示替换所有的匹配。</li>
+</ul>
+<p>实例:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line">phone = <span class="string">"2004-959-559 # 这是一个国外电话号码"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># 删除字符串中的 Python注释 </span></span><br><span class="line">num = re.sub(<span class="string">r'#.*$'</span>, <span class="string">""</span>, phone)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"电话号码是: "</span>, num</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 删除非数字(-)的字符串 </span></span><br><span class="line">num = re.sub(<span class="string">r'\D'</span>, <span class="string">""</span>, phone)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"电话号码是 : "</span>, num</span><br></pre></td></tr></table></figure>
+<p>以上实例执行结果如下：</p>
+<blockquote>
+<p>电话号码是:  2004-959-559<br>电话号码是 :  2004959559</p>
+</blockquote>
+<p><b>repl 参数是一个函数</b></p>
+<p>以下实例中将字符串中的匹配的数字乘以 2：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 将匹配的数字乘以 2</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">double</span><span class="params">(matched)</span>:</span></span><br><span class="line">    value = int(matched.group(<span class="string">'value'</span>))</span><br><span class="line">    <span class="keyword">return</span> str(value * <span class="number">2</span>)</span><br><span class="line"> </span><br><span class="line">s = <span class="string">'A23G4HFD567'</span></span><br><span class="line">print(re.sub(<span class="string">'(?P&lt;value&gt;\d+)'</span>, double, s))</span><br></pre></td></tr></table></figure>
+<p>执行输出结果为：</p>
+<blockquote>
+<p>A46G8HFD1134</p>
+</blockquote>
+<h1 id="使用python更换文件内容"><a href="#使用python更换文件内容" class="headerlink" title="使用python更换文件内容"></a>使用python更换文件内容</h1><p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cos_to_cdn</span><span class="params">(path,patterm,repl)</span>:</span></span><br><span class="line">    files = os.listdir(path)</span><br><span class="line">    <span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">        <span class="keyword">if</span> os.path.isdir(path+<span class="string">'/'</span>+file):</span><br><span class="line">            cos_to_cdn(path+<span class="string">'/'</span>+file,patterm,repl)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            s = <span class="string">''</span></span><br><span class="line">            f = open(path+<span class="string">'/'</span>+file,<span class="string">'r'</span>)</span><br><span class="line">            <span class="keyword">for</span> line <span class="keyword">in</span> f:</span><br><span class="line">                <span class="keyword">if</span> re.findall(patterm,line):</span><br><span class="line">                    line = re.sub(patterm,repl,line)</span><br><span class="line">                s += line</span><br><span class="line">            f.close()</span><br><span class="line">            fw = open(path+<span class="string">'/'</span>+file,<span class="string">'w'</span>)</span><br><span class="line">            fw.write(s)</span><br><span class="line">            fw.close()</span><br><span class="line"></span><br><span class="line">path = <span class="string">r'******'</span>   <span class="comment">#输入要替换的文件夹</span></span><br><span class="line">patterm = <span class="string">r'*********'</span>  <span class="comment">#要替换的字符串的正则表达式</span></span><br><span class="line">repl = <span class="string">r'*********'</span> <span class="comment">#替换后的字符串</span></span><br><span class="line">cos_to_cdn(path,patterm,repl)</span><br></pre></td></tr></table></figure>
+<p>此脚本可以迭代替换，也就是说如果文件夹中还有文件夹，则子文件夹中的内容也会被替换</p>
 ]]></content>
       <tags>
         <tag>note</tag>
@@ -427,106 +504,29 @@
       </tags>
   </entry>
   <entry>
-    <title>使用python更改一个文件夹中所有文件内容</title>
-    <url>/2020/05/29/note/note2/</url>
-    <content><![CDATA[<h1 id="python设置中文编码"><a href="#python设置中文编码" class="headerlink" title="python设置中文编码"></a>python设置中文编码</h1><p>在程序的开头加上一句</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br></pre></td></tr></table></figure>
-<p>其中第一行是将py文件设置成可直接使用<code>./name.py</code>执行<br>第一行不适用于windows，而且中间不能有空格<br>第二行等式两边不能有空格，加上第二行就可以中文输出了</p>
-<h1 id="python正则表达式"><a href="#python正则表达式" class="headerlink" title="python正则表达式"></a>python正则表达式</h1><h2 id="re-search方法"><a href="#re-search方法" class="headerlink" title="re.search方法"></a>re.search方法</h2><p>一、函数语法</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">re.search(pattern, string, flags=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
-
-<p>二、函数参数说明</p>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>pattern</td>
-<td>匹配的正则表达式</td>
-</tr>
-<tr>
-<td>string</td>
-<td>要匹配的字符串</td>
-</tr>
-<tr>
-<td>flags</td>
-<td>标志位，用于控制正则表达式的匹配方式，如：是否区分大小写，多行匹配等等</td>
-</tr>
-</tbody></table>
-<p>匹配成功re.search方法返回一个匹配的对象，否则返回None。<br>我们可以使用group(num) 或 groups() 匹配对象函数来获取匹配表达式。</p>
-<table>
-<thead>
-<tr>
-<th>匹配对象方法</th>
-<th>函数</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>group(num=0)</td>
-<td>匹配的整个表达式的字符串，group() 可以一次输入多个组号，在这种情况下它将返回一个包含那些组所对应值的元组</td>
-</tr>
-<tr>
-<td>groups()</td>
-<td>返回一个包含所有小组字符串的元组，从 1 到 所含的小组号。</td>
-</tr>
-</tbody></table>
-<p>三、实例</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*- </span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line">print(re.search(<span class="string">'www'</span>, <span class="string">'www.runoob.com'</span>).span())  <span class="comment"># 在起始位置匹配</span></span><br><span class="line">print(re.search(<span class="string">'com'</span>, <span class="string">'www.runoob.com'</span>).span())         <span class="comment"># 不在起始位置匹配</span></span><br></pre></td></tr></table></figure>
-<p>以上实例运行输出结果为：</p>
-<blockquote>
-<p>(0, 3)<br>(11, 14)</p>
-</blockquote>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line">line = <span class="string">"Cats are smarter than dogs"</span>;</span><br><span class="line"> </span><br><span class="line">searchObj = re.search( <span class="string">r'(.*) are (.*?) .*'</span>, line, re.M|re.I)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> searchObj:</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"searchObj.group() : "</span>, searchObj.group()</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"searchObj.group(1) : "</span>, searchObj.group(<span class="number">1</span>)</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"searchObj.group(2) : "</span>, searchObj.group(<span class="number">2</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">   <span class="keyword">print</span> <span class="string">"Nothing found!!"</span></span><br></pre></td></tr></table></figure>
-<p>以上实例执行结果如下：</p>
-<blockquote>
-<p>searchObj.group() :  Cats are smarter than dogs<br>searchObj.group(1) :  Cats<br>searchObj.group(2) :  smarter</p>
-</blockquote>
-<h2 id="findall"><a href="#findall" class="headerlink" title="findall"></a>findall</h2><p>在字符串中找到正则表达式所匹配的所有子串，并返回一个列表，如果没有找到匹配的，则返回空列表。<br><strong>注意</strong>： match 和 search 是匹配一次 findall 匹配所有。<br>语法格式为：</p>
-<blockquote>
-<p>findall(string[, pos[, endpos]])  </p>
-</blockquote>
-<p>参数：</p>
-<ul>
-<li><b>string:</b>待匹配的字符串。</li>
-<li><b>pos:</b>可选参数，指定字符串的起始位置，默认为 0。</li>
-<li><b>endpos:</b> 可选参数，指定字符串的结束位置，默认为字符串的长度。</li>
-</ul>
-<p>查找字符串中的所有数字：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># -*- coding:UTF8 -*-</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line">pattern = re.compile(<span class="string">r'\d+'</span>)   <span class="comment"># 查找数字</span></span><br><span class="line">result1 = pattern.findall(<span class="string">'runoob 123 google 456'</span>)</span><br><span class="line">result2 = pattern.findall(<span class="string">'run88oob123google456'</span>, <span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line"> </span><br><span class="line">print(result1)</span><br><span class="line">print(result2)</span><br></pre></td></tr></table></figure>
-<p>输出结果：</p>
-<blockquote>
-<p>[‘123’, ‘456’]<br>[‘88’, ‘12’]</p>
-</blockquote>
-<h2 id="检索和替换"><a href="#检索和替换" class="headerlink" title="检索和替换"></a>检索和替换</h2><p>Python 的 re 模块提供了re.sub用于替换字符串中的匹配项。<br>语法：</p>
-<blockquote>
-<p>re.sub(pattern, repl, string, count=0, flags=0)</p>
-</blockquote>
-<p>参数：  </p>
-<ul>
-<li>pattern : 正则中的模式字符串。</li>
-<li>repl : 替换的字符串，也可为一个函数。</li>
-<li>string : 要被查找替换的原始字符串。</li>
-<li>count : 模式匹配后替换的最大次数，默认 0 表示替换所有的匹配。</li>
-</ul>
-<p>实例:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line">phone = <span class="string">"2004-959-559 # 这是一个国外电话号码"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># 删除字符串中的 Python注释 </span></span><br><span class="line">num = re.sub(<span class="string">r'#.*$'</span>, <span class="string">""</span>, phone)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"电话号码是: "</span>, num</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 删除非数字(-)的字符串 </span></span><br><span class="line">num = re.sub(<span class="string">r'\D'</span>, <span class="string">""</span>, phone)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"电话号码是 : "</span>, num</span><br></pre></td></tr></table></figure>
-<p>以上实例执行结果如下：</p>
-<blockquote>
-<p>电话号码是:  2004-959-559<br>电话号码是 :  2004959559</p>
-</blockquote>
-<p><b>repl 参数是一个函数</b></p>
-<p>以下实例中将字符串中的匹配的数字乘以 2：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 将匹配的数字乘以 2</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">double</span><span class="params">(matched)</span>:</span></span><br><span class="line">    value = int(matched.group(<span class="string">'value'</span>))</span><br><span class="line">    <span class="keyword">return</span> str(value * <span class="number">2</span>)</span><br><span class="line"> </span><br><span class="line">s = <span class="string">'A23G4HFD567'</span></span><br><span class="line">print(re.sub(<span class="string">'(?P&lt;value&gt;\d+)'</span>, double, s))</span><br></pre></td></tr></table></figure>
-<p>执行输出结果为：</p>
-<blockquote>
-<p>A46G8HFD1134</p>
-</blockquote>
-<h1 id="使用python更换文件内容"><a href="#使用python更换文件内容" class="headerlink" title="使用python更换文件内容"></a>使用python更换文件内容</h1><p>代码如下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cos_to_cdn</span><span class="params">(path,patterm,repl)</span>:</span></span><br><span class="line">    files = os.listdir(path)</span><br><span class="line">    <span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">        <span class="keyword">if</span> os.path.isdir(path+<span class="string">'/'</span>+file):</span><br><span class="line">            cos_to_cdn(path+<span class="string">'/'</span>+file,patterm,repl)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            s = <span class="string">''</span></span><br><span class="line">            f = open(path+<span class="string">'/'</span>+file,<span class="string">'r'</span>)</span><br><span class="line">            <span class="keyword">for</span> line <span class="keyword">in</span> f:</span><br><span class="line">                <span class="keyword">if</span> re.findall(patterm,line):</span><br><span class="line">                    line = re.sub(patterm,repl,line)</span><br><span class="line">                s += line</span><br><span class="line">            f.close()</span><br><span class="line">            fw = open(path+<span class="string">'/'</span>+file,<span class="string">'w'</span>)</span><br><span class="line">            fw.write(s)</span><br><span class="line">            fw.close()</span><br><span class="line"></span><br><span class="line">path = <span class="string">r'******'</span>   <span class="comment">#输入要替换的文件夹</span></span><br><span class="line">patterm = <span class="string">r'*********'</span>  <span class="comment">#要替换的字符串的正则表达式</span></span><br><span class="line">repl = <span class="string">r'*********'</span> <span class="comment">#替换后的字符串</span></span><br><span class="line">cos_to_cdn(path,patterm,repl)</span><br></pre></td></tr></table></figure>
-<p>此脚本可以迭代替换，也就是说如果文件夹中还有文件夹，则子文件夹中的内容也会被替换</p>
+    <title>配置ubuntu</title>
+    <url>/2020/05/29/note/%E9%85%8D%E7%BD%AEubuntu/</url>
+    <content><![CDATA[<h1 id="ubuntu允许以root用户登录ssh"><a href="#ubuntu允许以root用户登录ssh" class="headerlink" title="ubuntu允许以root用户登录ssh"></a>ubuntu允许以root用户登录ssh</h1><p>修改配置文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo vi &#x2F;etc&#x2F;ssh&#x2F;sshd_config</span><br></pre></td></tr></table></figure>
+<p>找到下面配置：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Authentication:</span><br><span class="line">LoginGraceTime 120</span><br><span class="line">PermitRootLogin prohibit-password</span><br><span class="line">StrictModes yes</span><br></pre></td></tr></table></figure>
+<p>更改为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Authentication:</span><br><span class="line">LoginGraceTime 120</span><br><span class="line">#PermitRootLogin prohibit-password</span><br><span class="line">PermitRootLogin yes</span><br><span class="line">StrictModes yes</span><br></pre></td></tr></table></figure>
+<p>重启ssh</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo service ssh restart</span><br></pre></td></tr></table></figure>
+<p>接下来就可使用root登录了</p>
+<h1 id="使用root登录Ubuntu系统"><a href="#使用root登录Ubuntu系统" class="headerlink" title="使用root登录Ubuntu系统"></a>使用root登录Ubuntu系统</h1><h2 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h2><p>以普通用户登录系统，创建root用户的密码<br>在终端输入命令：<code>sudo passwd root</code><br>然后输入你要设置的密码，这样就完成了设置root用户密码的步骤</p>
+<h2 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h2><p>修改文件<code>/usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf</code>文件，增加两行：  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">greeter-show-manual-login&#x3D;true</span><br><span class="line">all-guest&#x3D;false</span><br></pre></td></tr></table></figure>
+<p>保存</p>
+<h2 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h2><p>进入<code>/etc/pam.d</code>目录，修改<code>gdm-autologin</code>和<code>gdm-password</code>文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi gdm-autologin</span><br></pre></td></tr></table></figure>
+<p>注释掉auth required pam_succeed_if.so user != root quiet_success这一行，保存</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi gdm-password</span><br></pre></td></tr></table></figure>
+<p>注释掉<code>auth required pam_succeed_if.so user != root quiet_success</code>这一行，保存</p>
+<h2 id="第四步"><a href="#第四步" class="headerlink" title="第四步"></a>第四步</h2><p>修改<code>/root/.profile</code>文件 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi &#x2F;root&#x2F;.profile</span><br></pre></td></tr></table></figure>
+<p>将文件末尾的<code>mesg n || true</code>这一行修改成<code>tty -s&amp;&amp;mesg n || true</code>，保存<br>重启系统，输入root用户名和密码，登陆系统</p>
 ]]></content>
       <tags>
         <tag>note</tag>

@@ -1174,7 +1174,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #ff059e;
+  background: #226fc9;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2666,12 +2666,12 @@ ul.breadcrumb li + li:last-child {
   }
 }
 body {
-  background: url("https://pic.xsblog.com/blog/2020-7-29-22-39-55.png");
+  background: url("https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-7-29-22-39-55.png");
   background-repeat: repeat;
   background-attachment: fixed;
 }
 .back-to-top {
-  background: url("https://pic.xsblog.com/blog/2020-7-29-22-39-55.png");
+  background: url("https://xsblog-1302078449.cos.ap-shanghai.myqcloud.com/blog/2020-7-29-22-39-55.png");
 }
 .highlight {
   border-radius: 7px;
