@@ -1174,7 +1174,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #71ffe7;
+  background: #9620af;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2666,12 +2666,12 @@ ul.breadcrumb li + li:last-child {
   }
 }
 body {
-  background: url("./images/white.png");
+  background: url("https://xsblog.xyz/images/white.png");
   background-repeat: repeat;
   background-attachment: fixed;
 }
 .back-to-top {
-  background: url("./images/white.png");
+  background: url("https://xsblog.xyz/images/white.png");
 }
 .highlight {
   border-radius: 7px;

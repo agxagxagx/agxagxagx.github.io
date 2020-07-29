@@ -1,25 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>IDA远程调试</title>
-    <url>/2020/06/10/IDA%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95/</url>
-    <content><![CDATA[<p>记一次IDA远程调试过程</p>
-<a id="more"></a>
-<hr>
-<p>首先打开IDA所在文件夹<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-18-50.png" alt="2020-06-10-21-18-50"><br>将<code>linux_server</code>和<code>linux_server64</code>两个文件传输到要远程访问的linux机器上  </p>
-<p>设置执行权限  </p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@VM-0-15-ubuntu:~/ctf<span class="comment"># chmod +x linux_server</span></span><br><span class="line">root@VM-0-15-ubuntu:~/ctf<span class="comment"># chmod +x linux_server64</span></span><br></pre></td></tr></table></figure>
-
-<p>如何要进行调试的文件是32程序则运行<code>linux_server</code>,如果是64位程序则运行<code>linux_server64</code><br>下面以32位程序为例：<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-28-08.png" alt="2020-06-10-21-28-08"><br>可以看到监听的端口为23946</p>
-<p>运行IDA32,选择远程linux调试<br>Debugger-&gt;Run-&gt;Remote Linux debugger<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-31-16.png" alt="2020-06-10-21-31-16"></p>
-<p>进行如下设置<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-35-34.png" alt="2020-06-10-21-35-34">  </p>
-<p>设置完成之后，就可以使用IDA远程调试了<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-38-26.png" alt="2020-06-10-21-38-26"><br>基本操作与Ollydbg差不多，支持更改汇编代码</p>
-]]></content>
-      <tags>
-        <tag>IDA</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>checksec工具使用</title>
     <url>/2020/05/29/checksec%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<p>checksec在ctf中使用非常多，主要用于pwn题，记录一下使用方法。</p>
@@ -51,6 +32,25 @@
       <tags>
         <tag>xctf</tag>
         <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>IDA远程调试</title>
+    <url>/2020/06/10/IDA%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95/</url>
+    <content><![CDATA[<p>记一次IDA远程调试过程</p>
+<a id="more"></a>
+<hr>
+<p>首先打开IDA所在文件夹<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-18-50.png" alt="2020-06-10-21-18-50"><br>将<code>linux_server</code>和<code>linux_server64</code>两个文件传输到要远程访问的linux机器上  </p>
+<p>设置执行权限  </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@VM-0-15-ubuntu:~/ctf<span class="comment"># chmod +x linux_server</span></span><br><span class="line">root@VM-0-15-ubuntu:~/ctf<span class="comment"># chmod +x linux_server64</span></span><br></pre></td></tr></table></figure>
+
+<p>如何要进行调试的文件是32程序则运行<code>linux_server</code>,如果是64位程序则运行<code>linux_server64</code><br>下面以32位程序为例：<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-28-08.png" alt="2020-06-10-21-28-08"><br>可以看到监听的端口为23946</p>
+<p>运行IDA32,选择远程linux调试<br>Debugger-&gt;Run-&gt;Remote Linux debugger<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-31-16.png" alt="2020-06-10-21-31-16"></p>
+<p>进行如下设置<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-35-34.png" alt="2020-06-10-21-35-34">  </p>
+<p>设置完成之后，就可以使用IDA远程调试了<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-38-26.png" alt="2020-06-10-21-38-26"><br>基本操作与Ollydbg差不多，支持更改汇编代码</p>
+]]></content>
+      <tags>
+        <tag>IDA</tag>
       </tags>
   </entry>
   <entry>
@@ -393,35 +393,6 @@
       </tags>
   </entry>
   <entry>
-    <title>配置ubuntu</title>
-    <url>/2020/05/29/note/%E9%85%8D%E7%BD%AEubuntu/</url>
-    <content><![CDATA[<h1 id="ubuntu允许以root用户登录ssh"><a href="#ubuntu允许以root用户登录ssh" class="headerlink" title="ubuntu允许以root用户登录ssh"></a>ubuntu允许以root用户登录ssh</h1><p>修改配置文件</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo vi &#x2F;etc&#x2F;ssh&#x2F;sshd_config</span><br></pre></td></tr></table></figure>
-<p>找到下面配置：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Authentication:</span><br><span class="line">LoginGraceTime 120</span><br><span class="line">PermitRootLogin prohibit-password</span><br><span class="line">StrictModes yes</span><br></pre></td></tr></table></figure>
-<p>更改为：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Authentication:</span><br><span class="line">LoginGraceTime 120</span><br><span class="line">#PermitRootLogin prohibit-password</span><br><span class="line">PermitRootLogin yes</span><br><span class="line">StrictModes yes</span><br></pre></td></tr></table></figure>
-<p>重启ssh</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo service ssh restart</span><br></pre></td></tr></table></figure>
-<p>接下来就可使用root登录了</p>
-<h1 id="使用root登录Ubuntu系统"><a href="#使用root登录Ubuntu系统" class="headerlink" title="使用root登录Ubuntu系统"></a>使用root登录Ubuntu系统</h1><h2 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h2><p>以普通用户登录系统，创建root用户的密码<br>在终端输入命令：<code>sudo passwd root</code><br>然后输入你要设置的密码，这样就完成了设置root用户密码的步骤</p>
-<h2 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h2><p>修改文件<code>/usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf</code>文件，增加两行：  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">greeter-show-manual-login&#x3D;true</span><br><span class="line">all-guest&#x3D;false</span><br></pre></td></tr></table></figure>
-<p>保存</p>
-<h2 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h2><p>进入<code>/etc/pam.d</code>目录，修改<code>gdm-autologin</code>和<code>gdm-password</code>文件</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi gdm-autologin</span><br></pre></td></tr></table></figure>
-<p>注释掉auth required pam_succeed_if.so user != root quiet_success这一行，保存</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi gdm-password</span><br></pre></td></tr></table></figure>
-<p>注释掉<code>auth required pam_succeed_if.so user != root quiet_success</code>这一行，保存</p>
-<h2 id="第四步"><a href="#第四步" class="headerlink" title="第四步"></a>第四步</h2><p>修改<code>/root/.profile</code>文件 </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi &#x2F;root&#x2F;.profile</span><br></pre></td></tr></table></figure>
-<p>将文件末尾的<code>mesg n || true</code>这一行修改成<code>tty -s&amp;&amp;mesg n || true</code>，保存<br>重启系统，输入root用户名和密码，登陆系统</p>
-]]></content>
-      <tags>
-        <tag>note</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>随笔三</title>
     <url>/2020/06/06/note/note3/</url>
     <content><![CDATA[<h2 id="read函数"><a href="#read函数" class="headerlink" title="read函数"></a>read函数</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssize_t read(int fd, void *buf, size_t count);</span><br></pre></td></tr></table></figure>
@@ -538,6 +509,35 @@
 <h2 id="‘-’符号"><a href="#‘-’符号" class="headerlink" title="‘|’符号"></a>‘|’符号</h2><p>将<code>|</code>符号前面的命令执行的结果作为操作对象传递给符号后的命令</p>
 <h2 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h2><p>grep（global search regular expression(RE) and print out the line，全面搜索正则表达式并把行打印出来）是一种强大的文本搜索工具，它能使用正则表达式搜索文本，并把匹配的<code>行</code>打印出来。  </p>
 <p>关于其用法可以参考<a href="https://man.linuxde.net/grep" target="_blank" rel="noopener">grep命令</a></p>
+]]></content>
+      <tags>
+        <tag>note</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>配置ubuntu</title>
+    <url>/2020/05/29/note/%E9%85%8D%E7%BD%AEubuntu/</url>
+    <content><![CDATA[<h1 id="ubuntu允许以root用户登录ssh"><a href="#ubuntu允许以root用户登录ssh" class="headerlink" title="ubuntu允许以root用户登录ssh"></a>ubuntu允许以root用户登录ssh</h1><p>修改配置文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo vi &#x2F;etc&#x2F;ssh&#x2F;sshd_config</span><br></pre></td></tr></table></figure>
+<p>找到下面配置：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Authentication:</span><br><span class="line">LoginGraceTime 120</span><br><span class="line">PermitRootLogin prohibit-password</span><br><span class="line">StrictModes yes</span><br></pre></td></tr></table></figure>
+<p>更改为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Authentication:</span><br><span class="line">LoginGraceTime 120</span><br><span class="line">#PermitRootLogin prohibit-password</span><br><span class="line">PermitRootLogin yes</span><br><span class="line">StrictModes yes</span><br></pre></td></tr></table></figure>
+<p>重启ssh</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo service ssh restart</span><br></pre></td></tr></table></figure>
+<p>接下来就可使用root登录了</p>
+<h1 id="使用root登录Ubuntu系统"><a href="#使用root登录Ubuntu系统" class="headerlink" title="使用root登录Ubuntu系统"></a>使用root登录Ubuntu系统</h1><h2 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h2><p>以普通用户登录系统，创建root用户的密码<br>在终端输入命令：<code>sudo passwd root</code><br>然后输入你要设置的密码，这样就完成了设置root用户密码的步骤</p>
+<h2 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h2><p>修改文件<code>/usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf</code>文件，增加两行：  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">greeter-show-manual-login&#x3D;true</span><br><span class="line">all-guest&#x3D;false</span><br></pre></td></tr></table></figure>
+<p>保存</p>
+<h2 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h2><p>进入<code>/etc/pam.d</code>目录，修改<code>gdm-autologin</code>和<code>gdm-password</code>文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi gdm-autologin</span><br></pre></td></tr></table></figure>
+<p>注释掉auth required pam_succeed_if.so user != root quiet_success这一行，保存</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi gdm-password</span><br></pre></td></tr></table></figure>
+<p>注释掉<code>auth required pam_succeed_if.so user != root quiet_success</code>这一行，保存</p>
+<h2 id="第四步"><a href="#第四步" class="headerlink" title="第四步"></a>第四步</h2><p>修改<code>/root/.profile</code>文件 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi &#x2F;root&#x2F;.profile</span><br></pre></td></tr></table></figure>
+<p>将文件末尾的<code>mesg n || true</code>这一行修改成<code>tty -s&amp;&amp;mesg n || true</code>，保存<br>重启系统，输入root用户名和密码，登陆系统</p>
 ]]></content>
       <tags>
         <tag>note</tag>
