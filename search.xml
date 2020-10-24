@@ -276,29 +276,11 @@
       </tags>
   </entry>
   <entry>
-    <title>配置ubuntu</title>
-    <url>/2020/05/29/note/%E9%85%8D%E7%BD%AEubuntu/</url>
-    <content><![CDATA[<h1 id="ubuntu允许以root用户登录ssh"><a href="#ubuntu允许以root用户登录ssh" class="headerlink" title="ubuntu允许以root用户登录ssh"></a>ubuntu允许以root用户登录ssh</h1><p>修改配置文件</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo vi &#x2F;etc&#x2F;ssh&#x2F;sshd_config</span><br></pre></td></tr></table></figure>
-<p>找到下面配置：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Authentication:</span><br><span class="line">LoginGraceTime 120</span><br><span class="line">PermitRootLogin prohibit-password</span><br><span class="line">StrictModes yes</span><br></pre></td></tr></table></figure>
-<p>更改为：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Authentication:</span><br><span class="line">LoginGraceTime 120</span><br><span class="line">#PermitRootLogin prohibit-password</span><br><span class="line">PermitRootLogin yes</span><br><span class="line">StrictModes yes</span><br></pre></td></tr></table></figure>
-<p>重启ssh</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo service ssh restart</span><br></pre></td></tr></table></figure>
-<p>接下来就可使用root登录了</p>
-<h1 id="使用root登录Ubuntu系统"><a href="#使用root登录Ubuntu系统" class="headerlink" title="使用root登录Ubuntu系统"></a>使用root登录Ubuntu系统</h1><h2 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h2><p>以普通用户登录系统，创建root用户的密码<br>在终端输入命令：<code>sudo passwd root</code><br>然后输入你要设置的密码，这样就完成了设置root用户密码的步骤</p>
-<h2 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h2><p>修改文件<code>/usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf</code>文件，增加两行：  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">greeter-show-manual-login&#x3D;true</span><br><span class="line">all-guest&#x3D;false</span><br></pre></td></tr></table></figure>
-<p>保存</p>
-<h2 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h2><p>进入<code>/etc/pam.d</code>目录，修改<code>gdm-autologin</code>和<code>gdm-password</code>文件</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi gdm-autologin</span><br></pre></td></tr></table></figure>
-<p>注释掉auth required pam_succeed_if.so user != root quiet_success这一行，保存</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi gdm-password</span><br></pre></td></tr></table></figure>
-<p>注释掉<code>auth required pam_succeed_if.so user != root quiet_success</code>这一行，保存</p>
-<h2 id="第四步"><a href="#第四步" class="headerlink" title="第四步"></a>第四步</h2><p>修改<code>/root/.profile</code>文件 </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi &#x2F;root&#x2F;.profile</span><br></pre></td></tr></table></figure>
-<p>将文件末尾的<code>mesg n || true</code>这一行修改成<code>tty -s&amp;&amp;mesg n || true</code>，保存<br>重启系统，输入root用户名和密码，登陆系统</p>
+    <title>随笔一</title>
+    <url>/2020/05/26/note/note1/</url>
+    <content><![CDATA[<h1 id="docker运行"><a href="#docker运行" class="headerlink" title="docker运行"></a>docker运行</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run -it --name &lt;name&gt; &lt;image&gt;    #启动</span><br><span class="line">docker run -itd --name &lt;name&gt; &lt;image&gt;    #后台启动</span><br><span class="line">docker exec -it &lt;container&gt; &#x2F;bin&#x2F;bash    #运行后台程序 #&#x2F;bin&#x2F;bash就是返回命令行，在启动容器时系统默认添加，但是运行后台容器时必须手动加上去</span><br><span class="line">docker export 1e560fca3906 &gt; ubuntu.tar    #导出容器</span><br><span class="line">cat docker&#x2F;ubuntu.tar | docker import - test&#x2F;ubuntu:v1    #导入容器快照</span><br><span class="line">docker container prune    #删除所有容器</span><br><span class="line">docker commit -m&#x3D;&quot;描述信息&quot; -a&#x3D;&quot;作者&quot; e218edb10161 runoob&#x2F;ubuntu:v2    #创建镜像</span><br><span class="line">docker run -itd --name my-nginx -p 8088:80 docker.io&#x2F;nginx &#x2F;bin&#x2F;bash   #端口转发</span><br></pre></td></tr></table></figure>
+
+<h1 id="hexo后台运行"><a href="#hexo后台运行" class="headerlink" title="hexo后台运行"></a>hexo后台运行</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo s &amp;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <tags>
         <tag>note</tag>
@@ -533,11 +515,29 @@
       </tags>
   </entry>
   <entry>
-    <title>随笔一</title>
-    <url>/2020/05/26/note/note1/</url>
-    <content><![CDATA[<h1 id="docker运行"><a href="#docker运行" class="headerlink" title="docker运行"></a>docker运行</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run -it --name &lt;name&gt; &lt;image&gt;    #启动</span><br><span class="line">docker run -itd --name &lt;name&gt; &lt;image&gt;    #后台启动</span><br><span class="line">docker exec -it &lt;container&gt; &#x2F;bin&#x2F;bash    #运行后台程序 #&#x2F;bin&#x2F;bash就是返回命令行，在启动容器时系统默认添加，但是运行后台容器时必须手动加上去</span><br><span class="line">docker export 1e560fca3906 &gt; ubuntu.tar    #导出容器</span><br><span class="line">cat docker&#x2F;ubuntu.tar | docker import - test&#x2F;ubuntu:v1    #导入容器快照</span><br><span class="line">docker container prune    #删除所有容器</span><br><span class="line">docker commit -m&#x3D;&quot;描述信息&quot; -a&#x3D;&quot;作者&quot; e218edb10161 runoob&#x2F;ubuntu:v2    #创建镜像</span><br><span class="line">docker run -itd --name my-nginx -p 8088:80 docker.io&#x2F;nginx &#x2F;bin&#x2F;bash   #端口转发</span><br></pre></td></tr></table></figure>
-
-<h1 id="hexo后台运行"><a href="#hexo后台运行" class="headerlink" title="hexo后台运行"></a>hexo后台运行</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo s &amp;</span><br></pre></td></tr></table></figure>
+    <title>配置ubuntu</title>
+    <url>/2020/05/29/note/%E9%85%8D%E7%BD%AEubuntu/</url>
+    <content><![CDATA[<h1 id="ubuntu允许以root用户登录ssh"><a href="#ubuntu允许以root用户登录ssh" class="headerlink" title="ubuntu允许以root用户登录ssh"></a>ubuntu允许以root用户登录ssh</h1><p>修改配置文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo vi &#x2F;etc&#x2F;ssh&#x2F;sshd_config</span><br></pre></td></tr></table></figure>
+<p>找到下面配置：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Authentication:</span><br><span class="line">LoginGraceTime 120</span><br><span class="line">PermitRootLogin prohibit-password</span><br><span class="line">StrictModes yes</span><br></pre></td></tr></table></figure>
+<p>更改为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Authentication:</span><br><span class="line">LoginGraceTime 120</span><br><span class="line">#PermitRootLogin prohibit-password</span><br><span class="line">PermitRootLogin yes</span><br><span class="line">StrictModes yes</span><br></pre></td></tr></table></figure>
+<p>重启ssh</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo service ssh restart</span><br></pre></td></tr></table></figure>
+<p>接下来就可使用root登录了</p>
+<h1 id="使用root登录Ubuntu系统"><a href="#使用root登录Ubuntu系统" class="headerlink" title="使用root登录Ubuntu系统"></a>使用root登录Ubuntu系统</h1><h2 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h2><p>以普通用户登录系统，创建root用户的密码<br>在终端输入命令：<code>sudo passwd root</code><br>然后输入你要设置的密码，这样就完成了设置root用户密码的步骤</p>
+<h2 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h2><p>修改文件<code>/usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf</code>文件，增加两行：  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">greeter-show-manual-login&#x3D;true</span><br><span class="line">all-guest&#x3D;false</span><br></pre></td></tr></table></figure>
+<p>保存</p>
+<h2 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h2><p>进入<code>/etc/pam.d</code>目录，修改<code>gdm-autologin</code>和<code>gdm-password</code>文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi gdm-autologin</span><br></pre></td></tr></table></figure>
+<p>注释掉auth required pam_succeed_if.so user != root quiet_success这一行，保存</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi gdm-password</span><br></pre></td></tr></table></figure>
+<p>注释掉<code>auth required pam_succeed_if.so user != root quiet_success</code>这一行，保存</p>
+<h2 id="第四步"><a href="#第四步" class="headerlink" title="第四步"></a>第四步</h2><p>修改<code>/root/.profile</code>文件 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi &#x2F;root&#x2F;.profile</span><br></pre></td></tr></table></figure>
+<p>将文件末尾的<code>mesg n || true</code>这一行修改成<code>tty -s&amp;&amp;mesg n || true</code>，保存<br>重启系统，输入root用户名和密码，登陆系统</p>
 ]]></content>
       <tags>
         <tag>note</tag>
