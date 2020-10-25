@@ -1,25 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>IDA远程调试</title>
-    <url>/2020/06/10/IDA%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95/</url>
-    <content><![CDATA[<p>记一次IDA远程调试过程</p>
-<a id="more"></a>
-<hr>
-<p>首先打开IDA所在文件夹<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-18-50.png" alt="2020-06-10-21-18-50"><br>将<code>linux_server</code>和<code>linux_server64</code>两个文件传输到要远程访问的linux机器上  </p>
-<p>设置执行权限  </p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@VM-0-15-ubuntu:~/ctf<span class="comment"># chmod +x linux_server</span></span><br><span class="line">root@VM-0-15-ubuntu:~/ctf<span class="comment"># chmod +x linux_server64</span></span><br></pre></td></tr></table></figure>
-
-<p>如何要进行调试的文件是32程序则运行<code>linux_server</code>,如果是64位程序则运行<code>linux_server64</code><br>下面以32位程序为例：<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-28-08.png" alt="2020-06-10-21-28-08"><br>可以看到监听的端口为23946</p>
-<p>运行IDA32,选择远程linux调试<br>Debugger-&gt;Run-&gt;Remote Linux debugger<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-31-16.png" alt="2020-06-10-21-31-16"></p>
-<p>进行如下设置<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-35-34.png" alt="2020-06-10-21-35-34">  </p>
-<p>设置完成之后，就可以使用IDA远程调试了<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-38-26.png" alt="2020-06-10-21-38-26"><br>基本操作与Ollydbg差不多，支持更改汇编代码</p>
-]]></content>
-      <tags>
-        <tag>IDA</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>checksec工具使用</title>
     <url>/2020/05/29/checksec%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<p>checksec在ctf中使用非常多，主要用于pwn题，记录一下使用方法。</p>
@@ -80,6 +61,32 @@
 <p>这里邮箱为注册邮箱，名字随意<br>然后<code>hexo g&amp;&amp;hexo d</code>即可实现部署<br>对于github，访问<code>yourname.github.io</code>测试是否可以成功访问<br>对于coding，访问其静态网站服务所提供的网址来测试  </p>
 <h2 id="域名绑定"><a href="#域名绑定" class="headerlink" title="域名绑定"></a>域名绑定</h2><p>我用的是阿里云，添加解析<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-15-55-51.png" alt="2020-07-06-15-55-51"><br>在github的page服务出绑定刚添加的解析域名<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-15-59-27.png" alt="2020-07-06-15-59-27"><br>在coding中也可以绑定域名，强制配置https<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-16-02-00.png" alt="2020-07-06-16-02-00">   </p>
 <p>对于github，还要在source文件夹里面新建CNAME文件，里面加入所绑定的域名，不然每次部署之后，绑定的域名就会消失<br><img src="https://pic.xsblog.xyz/blog/2020-07-06-16-26-38.png" alt="2020-07-06-16-26-38"><br>以上就全部配置完毕了</p>
+]]></content>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>hexo安装</title>
+    <url>/2020/05/18/hexo%E5%AE%89%E8%A3%85/</url>
+    <content><![CDATA[<p>现在网上很多教程都太老，过时了，导致我搭建的时候绕了很多弯路，好在最后还是被我搭建好了，记一下安装过程。</p>
+<a id="more"></a>
+<hr>
+<h1 id="hexo安装"><a href="#hexo安装" class="headerlink" title="hexo安装"></a>hexo安装</h1><h3 id="首先运行一个容器"><a href="#首先运行一个容器" class="headerlink" title="首先运行一个容器"></a>首先运行一个容器</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run -itd -p 80:4000 --name hexo ubuntu bash</span><br></pre></td></tr></table></figure>
+<p>这里以在ubuntu中搭建为例子</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker exec -it hexo env LANG&#x3D;C.UTF-8 bash</span><br></pre></td></tr></table></figure>
+<p>其中<code>env LANG=C.UTF-8</code>为环境变量，这样在docker容器中可以输入中文</p>
+<h3 id="安装git-curl-wget"><a href="#安装git-curl-wget" class="headerlink" title="安装git,curl,wget"></a>安装git,curl,wget</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apt-get update</span><br><span class="line">apt-get -y install git curl wget</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装nodejs"><a href="#安装nodejs" class="headerlink" title="安装nodejs"></a>安装nodejs</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apt-get install nodejs</span><br><span class="line">apt-get install npm</span><br><span class="line">npm i -g npm</span><br><span class="line"># 重启命令行，查看更新后的版本 npm -v</span><br><span class="line">npm install -g n</span><br><span class="line">n 12.18.2</span><br><span class="line"># 重启命令行，查看更新后的版本 nodejs -v</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装cnpm"><a href="#安装cnpm" class="headerlink" title="安装cnpm"></a>安装cnpm</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install -g cnpm --registry&#x3D;https:&#x2F;&#x2F;registry.npm.taobao.org</span><br></pre></td></tr></table></figure>
+<h3 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h3><p>使用cnpm安装hexo</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cnpm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+<p>然后创建一个文件夹，命名随意，将hexo的资源都放进去</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd ~</span><br><span class="line">mkdir hexo</span><br><span class="line">cd hexo </span><br><span class="line">hexo init</span><br></pre></td></tr></table></figure>
+<h3 id="Hexo的更新"><a href="#Hexo的更新" class="headerlink" title="Hexo的更新"></a>Hexo的更新</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm update hexo</span><br></pre></td></tr></table></figure>
+<p>使用<code>hexo -v</code>查看hexo当前版本</p>
 ]]></content>
       <tags>
         <tag>hexo</tag>
@@ -205,32 +212,6 @@
       </tags>
   </entry>
   <entry>
-    <title>hexo安装</title>
-    <url>/2020/05/18/hexo%E5%AE%89%E8%A3%85/</url>
-    <content><![CDATA[<p>现在网上很多教程都太老，过时了，导致我搭建的时候绕了很多弯路，好在最后还是被我搭建好了，记一下安装过程。</p>
-<a id="more"></a>
-<hr>
-<h1 id="hexo安装"><a href="#hexo安装" class="headerlink" title="hexo安装"></a>hexo安装</h1><h3 id="首先运行一个容器"><a href="#首先运行一个容器" class="headerlink" title="首先运行一个容器"></a>首先运行一个容器</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run -itd -p 80:4000 --name hexo ubuntu bash</span><br></pre></td></tr></table></figure>
-<p>这里以在ubuntu中搭建为例子</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker exec -it hexo env LANG&#x3D;C.UTF-8 bash</span><br></pre></td></tr></table></figure>
-<p>其中<code>env LANG=C.UTF-8</code>为环境变量，这样在docker容器中可以输入中文</p>
-<h3 id="安装git-curl-wget"><a href="#安装git-curl-wget" class="headerlink" title="安装git,curl,wget"></a>安装git,curl,wget</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apt-get update</span><br><span class="line">apt-get -y install git curl wget</span><br></pre></td></tr></table></figure>
-
-<h3 id="安装nodejs"><a href="#安装nodejs" class="headerlink" title="安装nodejs"></a>安装nodejs</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apt-get install nodejs</span><br><span class="line">apt-get install npm</span><br><span class="line">npm i -g npm</span><br><span class="line"># 重启命令行，查看更新后的版本 npm -v</span><br><span class="line">npm install -g n</span><br><span class="line">n 12.18.2</span><br><span class="line"># 重启命令行，查看更新后的版本 nodejs -v</span><br></pre></td></tr></table></figure>
-
-<h3 id="安装cnpm"><a href="#安装cnpm" class="headerlink" title="安装cnpm"></a>安装cnpm</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install -g cnpm --registry&#x3D;https:&#x2F;&#x2F;registry.npm.taobao.org</span><br></pre></td></tr></table></figure>
-<h3 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h3><p>使用cnpm安装hexo</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cnpm install -g hexo-cli</span><br></pre></td></tr></table></figure>
-<p>然后创建一个文件夹，命名随意，将hexo的资源都放进去</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd ~</span><br><span class="line">mkdir hexo</span><br><span class="line">cd hexo </span><br><span class="line">hexo init</span><br></pre></td></tr></table></figure>
-<h3 id="Hexo的更新"><a href="#Hexo的更新" class="headerlink" title="Hexo的更新"></a>Hexo的更新</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm update hexo</span><br></pre></td></tr></table></figure>
-<p>使用<code>hexo -v</code>查看hexo当前版本</p>
-]]></content>
-      <tags>
-        <tag>hexo</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>xctf进阶区</title>
     <url>/2020/06/07/xctf%E8%BF%9B%E9%98%B6%E5%8C%BA/</url>
     <content><![CDATA[<p>持续更新攻防世界pwn进阶区刷题过程。。。</p>
@@ -273,6 +254,25 @@
       <tags>
         <tag>xctf</tag>
         <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>IDA远程调试</title>
+    <url>/2020/06/10/IDA%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95/</url>
+    <content><![CDATA[<p>记一次IDA远程调试过程</p>
+<a id="more"></a>
+<hr>
+<p>首先打开IDA所在文件夹<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-18-50.png" alt="2020-06-10-21-18-50"><br>将<code>linux_server</code>和<code>linux_server64</code>两个文件传输到要远程访问的linux机器上  </p>
+<p>设置执行权限  </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@VM-0-15-ubuntu:~/ctf<span class="comment"># chmod +x linux_server</span></span><br><span class="line">root@VM-0-15-ubuntu:~/ctf<span class="comment"># chmod +x linux_server64</span></span><br></pre></td></tr></table></figure>
+
+<p>如何要进行调试的文件是32程序则运行<code>linux_server</code>,如果是64位程序则运行<code>linux_server64</code><br>下面以32位程序为例：<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-28-08.png" alt="2020-06-10-21-28-08"><br>可以看到监听的端口为23946</p>
+<p>运行IDA32,选择远程linux调试<br>Debugger-&gt;Run-&gt;Remote Linux debugger<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-31-16.png" alt="2020-06-10-21-31-16"></p>
+<p>进行如下设置<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-35-34.png" alt="2020-06-10-21-35-34">  </p>
+<p>设置完成之后，就可以使用IDA远程调试了<br><img src="https://pic.xsblog.xyz/blog/2020-06-10-21-38-26.png" alt="2020-06-10-21-38-26"><br>基本操作与Ollydbg差不多，支持更改汇编代码</p>
+]]></content>
+      <tags>
+        <tag>IDA</tag>
       </tags>
   </entry>
   <entry>
